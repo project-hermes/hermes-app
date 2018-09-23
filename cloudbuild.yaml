@@ -1,5 +1,5 @@
 substitutions:
-  _APP: github.com/sonyccd/app-engine-diving
+  _APP: github.com/project-hermes/hermes-app
 
 steps:
 
@@ -32,9 +32,9 @@ steps:
 - name: "gcr.io/cloud-builders/go"
   args:
     - test
-    - "./..."
+    - "./server/src/..."
   env:
-    - "GOPATH=/workspace/app-engine-diving:/workspace/go"
-  dir: "app-engine-diving/src"
+    - "GOPATH=/workspace/hermes-app:/workspace/go"
+  dir: "hermes-app/server/src"
 
 timeout: "600s"
