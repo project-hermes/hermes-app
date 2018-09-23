@@ -1,0 +1,40 @@
+substitutions:
+  _APP: github.com/sonyccd/app-engine-diving
+
+steps:
+
+- name: "gcr.io/cloud-builders/go"
+  args:
+  - get
+
+  - "firebase.google.com/go"
+  - "firebase.google.com/go/auth"
+
+  - "github.com/gin-gonic/gin"
+
+  - "google.golang.org/api/iterator"
+  - "google.golang.org/api/option"
+
+  - "google.golang.org/appengine"
+  - "google.golang.org/appengine/datastore"
+  - "google.golang.org/appengine/log"
+
+  - "gopkg.in/check.v1"
+
+  env:
+  - "GOPATH=go"
+
+- name: "gcr.io/cloud-builders/git"
+  args:
+    - clone
+    - "https://${_APP}"
+
+- name: "gcr.io/cloud-builders/go"
+  args:
+    - test
+    - "./..."
+  env:
+    - "GOPATH=/workspace/app-engine-diving:/workspace/go"
+  dir: "app-engine-diving/src"
+
+timeout: "600s"
