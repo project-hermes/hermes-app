@@ -5,7 +5,7 @@
 
 # Environments
 ## Staging
-All code that lands on master is auto deployed to the [staging environemtn](https://project-hermes-staging.firebaseapp.com/).
+All code that lands on master is auto deployed to the [staging environment](https://project-hermes-staging.firebaseapp.com/).
 
 ## Prod
 All code on the prod branch is auto deployed to [production](https://app.project-hermes.com/) via GCP Cloud Build.
