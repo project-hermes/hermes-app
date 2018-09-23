@@ -2,6 +2,13 @@
 [![codebeat badge](https://codebeat.co/badges/37f7b17f-07b8-4346-95f6-badd5be02056)](https://codebeat.co/projects/github-com-project-hermes-hermes-app-master)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/project-hermes/hermes-app.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/project-hermes/hermes-app/alerts/)
 
+# Environments
+## Staging
+All code that lands on master is auto deployed to the [staging environemtn](https://project-hermes-staging.firebaseapp.com/).
+
+## Prod
+All code on the prod branch is auto deployed to [production](https://app.project-hermes.com/) via GCP Cloud Build.
+
 # How to Contribute
 ## Project
 These are based on work in different areas. There is design, back end, and front end (more will be added). The boards are set ip kanban style with automated progression based on the tickets state.
