@@ -32,7 +32,7 @@ steps:
 - name: "gcr.io/cloud-builders/go"
   args:
     - test
-    - "./server/src/..."
+    - "./..."
   env:
     - "GOPATH=/workspace/hermes-app/server:/workspace/go"
   dir: "hermes-app/server/src"
