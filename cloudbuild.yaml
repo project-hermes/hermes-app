@@ -35,6 +35,6 @@ steps:
     - "./..."
   env:
     - "GOPATH=/workspace/hermes-app/server:/workspace/go"
-  dir: "hermes-app/server/src"
+  dir: "hermes-app/server"
 
 timeout: "600s"
