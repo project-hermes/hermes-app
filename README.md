@@ -7,7 +7,10 @@
 These are based on work in different areas. There is design, back end, and front end (more will be added). The boards are set ip kanban style with automated progression based on the tickets state.
 
 ## Issues
-Issues are for bugs, features, or just tasks. Issues have flags to sort what they are related to, such as design, enhancment etc. All work needs to be tracked in an issue.
+Issues are for bugs, features, or just tasks. All work needs to be tracked in an issue.
+
+### Labels
+Issues have flags to sort what they are related to, such as design, enhancment etc.
 
 ### Assignment
 The person the issue is assigned to is responsible for the work of the issue
