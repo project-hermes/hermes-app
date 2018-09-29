@@ -8,13 +8,14 @@
               <input
                 class="file-input"
                 type="file"
+                ref="upload"
                 @change="onFileSelect">
               <span class="file-cta">
                 <span class="file-icon">
                   <UploadCloudIcon />
                 </span>
                 <span class="file-label">
-                  Upload dive
+                  Select a dive
                 </span>
               </span>
               <span
@@ -25,7 +26,33 @@
             </label>
           </div>
         </div>
-        <progress v-if="status !== ''" class="progress is-success" :value="progress" max="100"></progress>
+        <p v-if="confirming" class="is-centered buttons">
+          <a @click="onConfirmation" class="button is-success">
+            <span class="icon is-small">
+                <CheckIcon />
+            </span>
+            <span>Upload</span>
+          </a>
+          <a @click="onCancel" class="button is-danger is-outlined">
+            <span>Cancel</span>
+          </a>
+        </p>
+        <progress
+          v-if="status === 'uploading'"
+          :value="progress"
+          class="progress is-success"
+          max="100"/>
+        <div v-else-if="status === 'complete'">
+            <h4 class="title is-4 has-text-centered">Thanks!</h4>
+        </div>
+        <div class="is-centered" v-else-if="status === 'error'">
+            <div>Oops. Something went wrong...</div>
+            <p class="is-centered buttons">
+                <a @click="onConfirmation" class="button is-success is-centered">
+                  <span>Try again?</span>
+                </a>
+            </p>
+        </div>
       </div>
     </div>
   </main>
@@ -34,7 +61,7 @@
 import UploadCloudIcon from 'vue-feather-icons/icons/UploadCloudIcon';
 import CheckIcon from 'vue-feather-icons/icons/CheckIcon';
 import head from 'lodash/head';
-import {mapGetters, mapActions} from 'vuex';
+import {mapGetters, mapActions, mapMutations} from 'vuex';
 
 export default {
     components: {
@@ -43,7 +70,8 @@ export default {
     },
     data() {
         return {
-            file: null
+            file: null,
+            confirming: false
         };
     },
     computed: {
@@ -59,10 +87,25 @@ export default {
         ...mapActions({
             uploadFile: 'upload/uploadFile'
         }),
+        ...mapMutations({
+            resetStatus: 'upload/resetStatus'
+        }),
         onFileSelect(event) {
-            this.file = head(event.target.files);
+            this.resetStatus();
+            this.file = event.target.files.item(0);
+            this.confirming = !!this.file;
+        },
+        onCancel() {
+            this.confirming = false;
+            this.file = null;
+            this.$refs.upload.value = '';
+        },
+        onConfirmation() {
+            this.confirming = false;
             this.uploadFile({
                 file: this.file
+            }).then(() => {
+                this.$refs.upload.value = '';
             });
         }
     }
