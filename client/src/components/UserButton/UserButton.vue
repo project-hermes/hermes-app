@@ -3,18 +3,21 @@
     class="user-button">
     <div
       :class="{'is-active': isActive}"
-      tabindex="0"
       class="dropdown is-right"
-      @click="toggle"
-      @blur="toggle(false)"
-      @keyup.enter="toggle">
-      <div class="dropdown-trigger">
+    >
+      <div
+        class="dropdown-trigger"
+        tabindex="0"
+        @click="toggle"
+        @blur="toggle(false)"
+        @keyup.enter="toggle"
+      >
         <img
           v-if="user.photoURL"
           :src="user.photoURL"
           class="user-button__icon"
           aria-haspopup="true"
-          aria-controls="dropdown-menu2">
+          aria-controls="dropdown-menu  ">
         <div
           v-else
           class="user-button__icon">
