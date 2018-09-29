@@ -87,5 +87,4 @@ export default {
 .dit__label {
     font-weight: 600;
 }
-
 </style>

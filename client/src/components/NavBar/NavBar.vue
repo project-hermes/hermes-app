@@ -83,7 +83,7 @@ export default {
             60deg,
             $softestBlue,
             $mainBlue,
-            $softBlue,
+            $softBlue
         );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;

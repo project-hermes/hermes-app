@@ -7,7 +7,7 @@
         "build": "webpack --config ./webpack.dev.js",
         "build:watch": "webpack --config ./webpack.dev.js  --watch",
         "build:prod": "webpack --config ./webpack.prod.js",
-        "lint": "eslint src --fix --ext .vue",
+        "lint": "eslint client --fix --ext .vue",
         "start:dev": "webpack-dev-server --config ./webpack.dev.js --watch --hot --open",
         "test": "NODE_ENV=test ./node_modules/.bin/jest"
     },
@@ -75,11 +75,11 @@
     },
     "jest": {
         "moduleNameMapper": {
-            "~(.*)$": "<rootDir>/src/$1",
+            "~(.*)$": "<rootDir>/client/src/$1",
             "^vue$": "vue/dist/vue.common.js",
-            "highcharts": "<rootDir>/src/mocks/highcharts.js",
-            "leaflet": "<rootDir>/src/mocks/leaflet.js",
-            "vue-feather-icons/.*": "<rootDir>/src/mocks/vue-feather-icons.js"
+            "highcharts": "<rootDir>/client/src/mocks/highcharts.js",
+            "leaflet": "<rootDir>/client/src/mocks/leaflet.js",
+            "vue-feather-icons/.*": "<rootDir>/client/src/mocks/vue-feather-icons.js"
         },
         "moduleFileExtensions": [
             "js",

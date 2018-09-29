@@ -53,7 +53,7 @@
         <h1 class="title">Select a dive</h1>
       </section>
     </div>
-</main>
+  </main>
 </template>
 
 <script>

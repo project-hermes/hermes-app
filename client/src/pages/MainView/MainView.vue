@@ -1,32 +1,32 @@
 <template>
-    <main class="main-view">
-        <!-- <NavBar class="main-view__nav"/> -->
-        <div class="main-view__map-wrapper">
-          <div
-            :class="{'main-view__details__open': selectedDiveId}"
-            class="main-view__map-wrapper">
-            <SimpleMap
-              v-model="selectedDiveId"
-              :markers="mapMarkers"
-              view="global"
-              class="main-view__map"
-            />
-          </div>
-          <DiveInfoTable
-            v-if="selectedDive"
-            :dive="selectedDive"
-            class="main-view__details"
-          >
-            <router-link
-              slot="footer"
-              :to="diveRoute"
-              class="main-view__details-button button is-text">
-              <BarChartIcon />
-              See Data
-            </router-link>
-          </DiveInfoTable>
-        </div>
-    </main>
+  <main class="main-view">
+    <!-- <NavBar class="main-view__nav"/> -->
+    <div class="main-view__map-wrapper">
+      <div
+        :class="{'main-view__details__open': selectedDiveId}"
+        class="main-view__map-wrapper">
+        <SimpleMap
+          v-model="selectedDiveId"
+          :markers="mapMarkers"
+          view="global"
+          class="main-view__map"
+        />
+      </div>
+      <DiveInfoTable
+        v-if="selectedDive"
+        :dive="selectedDive"
+        class="main-view__details"
+      >
+        <router-link
+          slot="footer"
+          :to="diveRoute"
+          class="main-view__details-button button is-text">
+          <BarChartIcon />
+          See Data
+        </router-link>
+      </DiveInfoTable>
+    </div>
+  </main>
 </template>
 <script>
 import {NavBar, SimpleMap, DiveInfoTable} from '~/components';

@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-    entry: ['./src/app.js'],
+    entry: ['./client/src/app.js'],
     output: {
         path: path.resolve(__dirname, 'public'),
         filename: '[name].bundle.js',
@@ -13,7 +13,7 @@ module.exports = {
     },
     resolve: {
         alias: {
-            '~': path.resolve(__dirname, 'src'),
+            '~': path.resolve(__dirname, 'client', 'src'),
             vue: 'vue/dist/vue.js'
         }
     },
@@ -25,7 +25,7 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                include: /src/,
+                include: /client/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
@@ -80,7 +80,7 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(['public']),
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: './client/src/index.html'
         }),
         new MiniCssExtractPlugin({
             filename: 'style.[contenthash].css'
