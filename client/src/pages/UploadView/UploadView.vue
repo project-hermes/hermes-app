@@ -1,122 +1,75 @@
 <template>
-  <main class="upload-view">
-    <div class="columns is-centered">
-      <div class="upload-view--container">
-        <div class="field">
-          <div class="file is-medium is-boxed has-name is-primary">
-            <label class="file-label">
-              <input
-                class="file-input"
-                type="file"
-                ref="upload"
-                @change="onFileSelect">
-              <span class="file-cta">
-                <span class="file-icon">
-                  <UploadCloudIcon />
-                </span>
-                <span class="file-label">
-                  Select a dive
-                </span>
-              </span>
-              <span
-                :class="{'upload-view--file-name--empty': !fileName}"
-                class="upload-view--file-name file-name">
-                {{ fileName }}
-              </span>
-            </label>
-          </div>
-        </div>
-        <p v-if="confirming" class="is-centered buttons">
-          <a @click="onConfirmation" class="button is-success">
-            <span class="icon is-small">
-                <CheckIcon />
-            </span>
-            <span>Upload</span>
-          </a>
-          <a @click="onCancel" class="button is-danger is-outlined">
-            <span>Cancel</span>
-          </a>
-        </p>
-        <progress
-          v-if="status === 'uploading'"
-          :value="progress"
-          class="progress is-success"
-          max="100"/>
-        <div v-else-if="status === 'complete'">
-            <h4 class="title is-4 has-text-centered">Thanks!</h4>
-        </div>
-        <div class="is-centered" v-else-if="status === 'error'">
-            <div>Oops. Something went wrong...</div>
-            <p class="is-centered buttons">
-                <a @click="onConfirmation" class="button is-success is-centered">
-                  <span>Try again?</span>
-                </a>
-            </p>
-        </div>
-      </div>
+  <main class="container mx-auto h-full flex flex-col items-center">
+    <div class="sm:w-5/5 md:w-4/5 lg:w-3/5 xl:w-3/5 flex flex-col items-start justify-middle m-4 text-black">
+      <h1 class="my-2 font-normal text-4xl">Upload Dive Data</h1>
+      <p class="my-2">
+        The data you upload will be securely stored in our cloud database.
+        As we collect more data, we will begin to release tools for the
+        scientific and academic communities to access the database for their research.
+      </p>
+      <Uploader
+        class="uploader-min-height w-full h-full"
+        @confirm="onConfirmation"
+        :progress="progress" />
+      <p class="my-2 text-sm">
+        XML files from MacDive and Subcurrent are supported.
+      </p>
     </div>
   </main>
 </template>
 <script>
-import UploadCloudIcon from 'vue-feather-icons/icons/UploadCloudIcon';
+import UploadIcon from 'vue-feather-icons/icons/UploadIcon';
 import CheckIcon from 'vue-feather-icons/icons/CheckIcon';
 import head from 'lodash/head';
 import {mapGetters, mapActions, mapMutations} from 'vuex';
+import {Uploader} from '~/components';
 
 export default {
     components: {
-        UploadCloudIcon,
-        CheckIcon
-    },
-    data() {
-        return {
-            file: null,
-            confirming: false
-        };
+        UploadIcon,
+        CheckIcon,
+        Uploader
     },
     computed: {
         ...mapGetters({
             progress: 'upload/progress',
             status: 'upload/status'
-        }),
-        fileName() {
-            return this.file ? this.file.name : '';
-        }
+        })
+    },
+    mounted () {
+        this.resetState();
     },
     methods: {
         ...mapActions({
-            uploadFile: 'upload/uploadFile'
+            uploadFiles: 'upload/uploadFiles'
         }),
         ...mapMutations({
-            resetStatus: 'upload/resetStatus'
+            resetState: 'upload/resetState'
         }),
-        onFileSelect(event) {
-            this.resetStatus();
-            this.file = event.target.files.item(0);
-            this.confirming = !!this.file;
-        },
-        onCancel() {
-            this.confirming = false;
-            this.file = null;
-            this.$refs.upload.value = '';
-        },
-        onConfirmation() {
-            this.confirming = false;
-            this.uploadFile({
-                file: this.file
+        onConfirmation(files) {
+            this.uploadFiles({
+                files
             }).then(() => {
-                this.$refs.upload.value = '';
+                this;
+                console.log(this);
+                this.$nextTick(() => {
+                    this.$router.push({
+                        name: 'thanks'
+                    });
+                });
+                // setTimeout(() => {
+                //     this.$router.push({
+                //         name: 'thanks'
+                //     });
+                // }, 1000);
             });
         }
     }
 };
 </script>
-<style lang="scss">
-.upload-view {
-    height: 100%;
-
-    &--container {
-        margin-top: 5rem;
-    }
+<style>
+.uploader-min-height {
+    min-height: 12rem;
+    height: auto;
 }
 </style>

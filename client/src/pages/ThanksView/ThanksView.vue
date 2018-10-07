@@ -1,0 +1,31 @@
+<template>
+  <main class="container mx-auto h-full flex flex-col items-center">
+    <div class="sm:w-5/5 md:w-3/5 lg:w-2/5 xl:w-2/5 flex flex-col items-center justify-middle m-4 text-black">
+      <CheckCircleIcon class="text-green h-24 w-24" />
+      <p class="py-3">
+        You’re all done, thanks for submitting data!
+        <br />
+        You can close this window or
+        <a
+          class="underline text-blue cursor-pointer"
+          @click="goToUploadPage">upload more files.</a>
+      </p>
+    </div>
+  </main>
+</template>
+<script>
+import CheckCircleIcon from 'vue-feather-icons/icons/CheckCircleIcon';
+
+export default {
+    components: {
+        CheckCircleIcon
+    },
+    methods: {
+        goToUploadPage() {
+            this.$router.push({
+                name: 'upload'
+            });
+        }
+    }
+};
+</script>

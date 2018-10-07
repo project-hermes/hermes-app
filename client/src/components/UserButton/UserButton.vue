@@ -1,12 +1,9 @@
 <template>
   <div
-    class="user-button">
-    <div
-      :class="{'is-active': isActive}"
-      class="dropdown is-right"
-    >
+    class="relative z-10 user-button">
+    <div>
       <div
-        class="dropdown-trigger"
+        class="relative dropdown-trigger"
         tabindex="0"
         @click="toggle"
         @blur="toggle(false)"
@@ -24,12 +21,10 @@
           <UserIcon />
         </div>
       </div>
-      <div
-        id="dropdown-menu2"
-        class="dropdown-menu"
-        role="menu">
-        <div class="dropdown-content">
-          <div class="dropdown-item">
+        <div
+            :class="{'hidden': !isActive}"
+            class="absolute z-10 list-reset shadow-md mt-10 pin-t pin-r bg-white">
+          <div class="p-4">
             <div v-if="!user.isAnonymous">
               <p v-if="user.displayName"><strong>{{ user.displayName }}</strong></p>
               <p>{{ user.email }}</p>
@@ -37,17 +32,17 @@
             <div v-else>
               <p><em>Anonymous User</em></p>
             </div>
-          </div>
-          <hr class="dropdown-divider">
-          <a
-            class="dropdown-item"
-            tabindex="0"
-            @blur="toggle(false)"
-            @focus="toggle(true)"
-            @click="signOut"
-            @keyup.enter="signOut">
-            Sign out
-          </a>
+        </div>
+          <div class="py-2 border-t border-grey">
+            <a
+              class="p-2 block w-full h-full cursor-pointer hover:bg-grey-lighter"
+              tabindex="0"
+              @blur="toggle(false)"
+              @focus="toggle(true)"
+              @click="signOut"
+              @keyup.enter="signOut">
+              Sign out
+            </a>
         </div>
       </div>
     </div>

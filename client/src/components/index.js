@@ -12,3 +12,4 @@ export {default as RangePicker} from './RangePicker/RangePicker.vue';
 export {
     default as CoordinatePicker
 } from './CoordinatePicker/CoordinatePicker.vue';
+export {default as Uploader} from './Uploader/Uploader.vue';

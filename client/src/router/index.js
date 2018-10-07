@@ -10,7 +10,9 @@ import {
     NavView,
     SignUp,
     UploadView,
-    DiveDetails
+    MainView,
+    DiveDetails,
+    ThanksView
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -30,11 +32,11 @@ const router = new VueRouter({
                 next();
             }
         },
-        {
-            path: '/sign-up',
-            name: 'signUp',
-            component: SignUp
-        },
+        // {
+        //     path: '/sign-up',
+        //     name: 'signUp',
+        //     component: SignUp
+        // },
         {
             path: '/',
             component: NavView,
@@ -45,35 +47,45 @@ const router = new VueRouter({
                 {
                     path: '/',
                     name: 'main',
+                    component: MainView
+                },
+                {
+                    path: '/upload',
+                    name: 'upload',
                     component: UploadView
                 },
                 {
-                    path: '/quick',
-                    component: Dives
-                },
-                {
-                    path: '/dives',
-                    name: 'dives',
-                    component: DiveList
-                },
-                {
-                    path: '/dives/:id',
-                    name: 'diveDetails',
-                    component: DiveDetails,
-                    props: true
-                },
-                {
-                    path: '/map',
-                    component: MapView
-                },
-                {
-                    path: '/charts',
-                    component: ChartView
-                },
-                {
-                    path: '/demo',
-                    component: Demo
+                    path: '/thank-you',
+                    name: 'thanks',
+                    component: ThanksView
                 }
+                // {
+                //     path: '/quick',
+                //     component: Dives
+                // },
+                // {
+                //     path: '/dives',
+                //     name: 'dives',
+                //     component: DiveList
+                // },
+                // {
+                //     path: '/dives/:id',
+                //     name: 'diveDetails',
+                //     component: DiveDetails,
+                //     props: true
+                // },
+                // {
+                //     path: '/map',
+                //     component: MapView
+                // },
+                // {
+                //     path: '/charts',
+                //     component: ChartView
+                // },
+                // {
+                //     path: '/demo',
+                //     component: Demo
+                // }
             ]
         }
     ]
