@@ -50,7 +50,7 @@ module.exports = {
                 use: [
                     'vue-style-loader',
                     MiniCssExtractPlugin.loader,
-                    'css-loader',
+                    {loader: 'css-loader', options: {minimize: true}},
                     'postcss-loader',
                     {
                         loader: 'sass-loader',
