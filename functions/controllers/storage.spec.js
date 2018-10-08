@@ -1,80 +1,119 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const os = require('os');
+const path = require('path');
 const sinon = require('sinon');
 const StorageController = require('./storage');
+const { Storage } = require('@google-cloud/storage');
 const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 describe('Storage controller...', () => {
-    var controller, requestStub, info;
-    before(() => {
-
+    let sandbox;
+    var controller, storageObj, bucketStub, fileStub, downloadStub, gen;
+    beforeEach(() => {
+        sandbox = sinon.createSandbox();
     });
 
     after(() => {
-
+        sandbox.restore();
     });
 
     beforeEach(() => {
-        requestStub = sinon.stub();
-        controller = new StorageController();
+        storage = new Storage();
+
+        downloadStub = sinon.stub();
+        fileStub = sinon.stub().returns({
+            download: downloadStub
+        });
+        bucketStub = sinon.stub(storage, 'bucket').returns({
+            file: fileStub
+        });
+
+        controller = new StorageController(storage);
     });
 
     describe('read file...', () => {
         beforeEach(() => {
-            info = {
-                from: 'from@test.com',
-                to: 'test@test.com',
-                subject: 'This is a Test',
-                html: '<body>Test</body>',
-                text: 'Test'
+            storageObj = {
+                name: '/sub-dir/test-file.json',
+                bucket: 'test-bucket',
             };
-            controller.readFile();
+            gen = controller.readFile(storageObj);
+            gen.next();
         });
 
         afterEach(() => {
-            requestStub.reset();
+            bucketStub.reset();
+            fileStub.reset();
+            downloadStub.reset();
         });
 
-        describe('request...', () => {
+        describe('storage bucket function...', () => {
             it('is called one time', () => {
-                expect(requestStub.callCount).to.equal(1);
+                expect(bucketStub.callCount).to.equal(1);
             });
 
-            // it('is called with one argument', () => {
-            //     expect(requestStub.firstCall.args.length).to.equal(1);
-            // });
+            it('is called with one argument', () => {
+                expect(bucketStub.firstCall.args.length).to.equal(1);
+            });
 
             describe('first argument...', () => {
                 var arg;
                 beforeEach(() => {
-                    arg = requestStub.firstCall.args[0];
+                    arg = bucketStub.firstCall.args[0];
                 });
 
-                // it('one element in header', () => {
-                //     let headers = arg.headers;
-                //     expect(Object.keys(headers).length).to.equal(1);
-                // });
+                it('storage object bucket name', () => {
+                    expect(arg).to.equal('test-bucket');
+                });
+            });
+        });
 
-                // it('contains authorization header', () => {
-                //     expect(arg.headers).to.haveOwnProperty('Authorization');
-                // });
+        describe(`bucket's file function...`, () => {
+            it('is called one time', () => {
+                expect(fileStub.callCount).to.equal(1);
+            });
 
-                // it('authorization value is a base64 encoded string', () => {
-                //     let auth = new Buffer(`api:key12345`).toString('base64');
-                //     let basic = `Basic ${auth}`;
-                //     expect(arg.headers['Authorization']).to.equal(basic);
-                // });
+            it('is called with one argument', () => {
+                expect(fileStub.firstCall.args.length).to.equal(1);
+            });
 
-                // it('method is POST', () => {
-                //     expect(arg.method).to.equal('POST');
-                // });
+            describe('first argument...', () => {
+                var arg;
+                beforeEach(() => {
+                    arg = fileStub.firstCall.args[0];
+                });
 
-                // it('uri is mailgun v3 with domain and messages appended', () => {
-                //     let expectedUri = 'https://api.mailgun.net/v3/test.flyworkouts.com/messages';
-                //     expect(arg.uri).to.equal(expectedUri);
-                // });
+                it('storage object bucket name', () => {
+                    expect(arg).to.equal('/sub-dir/test-file.json');
+                });
+            });
+        });
 
+        describe(`file's download function...`, () => {
+            beforeEach(() => {
+            });
+
+            it('is called one time', () => {
+                expect(downloadStub.callCount).to.equal(1);
+            });
+
+            it('is called with one argument', () => {
+                expect(downloadStub.firstCall.args.length).to.equal(1);
+            });
+
+            describe('first argument...', () => {
+                var arg;
+                beforeEach(() => {
+                    arg = downloadStub.firstCall.args[0];
+                });
+
+                it('storage object bucket name', () => {
+                    const tempLocalDir = path.join(os.tmpdir(), 'sub-dir');
+                    const tempLocalFile = path.join(tempLocalDir, 'test-file.json');
+                    expect(arg['destination']).to.equal(tempLocalFile);
+                });
             });
         });
 
