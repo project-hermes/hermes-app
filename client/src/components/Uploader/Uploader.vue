@@ -36,11 +36,14 @@
         :progress="progress[index]"
         @remove="onRemove" />
       <div class="px-4 py-2 flex justify-end">
-        <a
-          class="self-center p-2 hover:underline text-blue cursor-pointer"
-          @click="openBrowse">Upload more files</a>
         <button
-          class="bg-blue hover:bg-blue-dark text-white font-normal my-2 py-2 px-4 rounded"
+          class="bg-white hover:bg-grey-lighter text-black font-normal text-sm my-2 py-2 px-4 rounded"
+          @click="openBrowse"
+        >
+          Upload more files
+        </button>
+        <button
+          class="bg-blue hover:bg-blue-dark text-white font-normal text-sm my-2 py-2 px-4 rounded ml-1"
           @click="onConfirm">
           Submit
         </button>

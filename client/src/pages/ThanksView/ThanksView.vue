@@ -1,7 +1,7 @@
 <template>
   <main
     :style="{'opacity': opacity}"
-    class="opacity-ease-in container mx-auto my-8 h-full flex flex-col items-center">
+    class="opacity-ease-in container mx-auto my-10 h-full flex flex-col items-center">
     <div class="sm:w-5/5 md:w-3/5 lg:w-2/5 xl:w-2/5 flex flex-col items-center justify-middle m-4 text-black">
       <CheckCircleIcon class="text-green h-24 w-24" />
       <p class="py-3">
@@ -9,7 +9,7 @@
         <br />
         You can close this window or
         <a
-          class="underline text-blue cursor-pointer"
+          class="hover:underline text-blue cursor-pointer"
           @click="goToUploadPage">upload more files.</a>
       </p>
     </div>

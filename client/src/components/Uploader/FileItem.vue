@@ -2,14 +2,14 @@
   <div
     :class="[progress === 100 ? 'bg-green-lighter' : 'bg-grey-lighter']"
     class="w-full my-2 p-2 rounded relative">
-    <span class="text-black relative z-10">
+    <span class="text-black relative z-10 text-sm">
       <FileIcon
         v-if="!progress"
         class="text-grey-darker h-4 w-4 text-center align-text-top" />
       <span
         v-else-if="progress === 100"
         class="inline-block bg-green rounded-full h-4 w-4">
-        <CheckIcon class="check text-white mb-1 h-3 w-4 align-middle font-semibold" />
+        <CheckIcon class="check text-white h-3 w-4 align-middle font-semibold" />
       </span>
       <ClockIcon
         v-else
