@@ -1,5 +1,7 @@
 <template>
-  <main class="container mx-auto h-full flex flex-col items-center">
+  <main
+    :style="{'opacity': opacity}"
+    class="opacity-ease-in container mx-auto my-8 h-full flex flex-col items-center">
     <div class="sm:w-5/5 md:w-3/5 lg:w-2/5 xl:w-2/5 flex flex-col items-center justify-middle m-4 text-black">
       <CheckCircleIcon class="text-green h-24 w-24" />
       <p class="py-3">
@@ -20,12 +22,28 @@ export default {
     components: {
         CheckCircleIcon
     },
+    data () {
+        return {
+            opacity: 0
+        };
+    },
     methods: {
         goToUploadPage() {
             this.$router.push({
                 name: 'upload'
             });
         }
+    },
+    created () {
+        setTimeout(() => {
+            this.opacity = 1;
+        }, 100);
     }
 };
 </script>
+<style scoped>
+.opacity-ease-in {
+    transition: opacity 0.25s ease-in;
+}
+
+</style>

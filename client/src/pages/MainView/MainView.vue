@@ -13,7 +13,7 @@
               Upload File
           </button>
           <p class="my-2 text-sm">
-              XML files from MacDive and Subcurrent are supported.
+              XML files from MacDive and Subsurface are supported.
           </p>
       </div>
   </main>

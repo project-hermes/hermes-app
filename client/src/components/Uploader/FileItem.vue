@@ -5,7 +5,7 @@
     <span class="text-black relative z-10">
       <FileIcon
         v-if="!progress"
-        class="text-grey-darker h-4 w-4 text-center align-text-bottom" />
+        class="text-grey-darker h-4 w-4 text-center align-text-top" />
       <span
         v-else-if="progress === 100"
         class="inline-block bg-green rounded-full h-4 w-4">

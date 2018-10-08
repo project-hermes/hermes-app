@@ -8,11 +8,11 @@
         scientific and academic communities to access the database for their research.
       </p>
       <Uploader
-        class="uploader-min-height w-full h-full"
+        class="uploader-min-height w-full h-full mt-2"
         @confirm="onConfirmation"
         :progress="progress" />
       <p class="my-2 text-sm">
-        XML files from MacDive and Subcurrent are supported.
+        XML files from MacDive and Subsurface are supported.
       </p>
     </div>
   </main>
@@ -50,18 +50,11 @@ export default {
             this.uploadFiles({
                 files
             }).then(() => {
-                this;
-                console.log(this);
-                this.$nextTick(() => {
+                setTimeout(() => {
                     this.$router.push({
                         name: 'thanks'
                     });
-                });
-                // setTimeout(() => {
-                //     this.$router.push({
-                //         name: 'thanks'
-                //     });
-                // }, 1000);
+                }, 500);
             });
         }
     }

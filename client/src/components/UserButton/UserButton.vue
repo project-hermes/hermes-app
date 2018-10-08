@@ -89,7 +89,7 @@ export default {
     height: 28px;
     width: 28px;
     color: #363636;
-    background-color: whitesmoke;
+    background-color: white;
 
     > svg {
         height: 28px;

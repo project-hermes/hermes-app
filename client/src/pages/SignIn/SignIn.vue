@@ -7,7 +7,7 @@
         class="pb-10"
         alt="Project Hermes logo">
     </div>
-    <div class="flex-2 py-16 px-16 flex flex-col items-center justify-center border-b border-t border-solid border-transparent-white">
+    <div class="flex-2 py-16 px-20 flex flex-col items-center justify-center border-b border-t border-solid border-transparent-white">
       <GoogleButton @click.native="signInWithGoogle" />
     </div>
     <div class="flex-1">

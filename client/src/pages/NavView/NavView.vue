@@ -4,9 +4,7 @@
     <NavBar
       v-if="isAuthorized"/>
     <div class="relative">
-      <transition name="fade">
         <router-view />
-      </transition>
     </div>
   </div>
 </template>
@@ -26,14 +24,3 @@ export default {
     }
 };
 </script>
-<style>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 150ms;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-.fade-enter-active {
-  transition-delay: 150ms;
-}
-</style>
