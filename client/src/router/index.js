@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {SignIn, NavView, UploadView, MainView, ThanksView} from '~/pages';
+import {SignIn, NavView, UploadView, ThanksView} from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
 const readyPromise = store.getters['auth/readyPromise'];
@@ -34,11 +34,6 @@ const router = new VueRouter({
                 {
                     path: '/',
                     name: 'main',
-                    component: MainView
-                },
-                {
-                    path: '/upload',
-                    name: 'upload',
                     component: UploadView
                 },
                 {
