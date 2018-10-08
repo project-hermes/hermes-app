@@ -66,38 +66,6 @@ export default {
             });
 
             return Promise.all(promises);
-        },
-        uploadFile({commit, rootGetters}, {file}) {
-            return Promise.reject();
-
-            commit('setStatus', 'uploading');
-            const user = rootGetters['auth/user'];
-            try {
-                const diveRef = storageRef.child(
-                    `raw-dive-files/${user.uid}-${Date.now()}`
-                );
-                const uploadTask = diveRef.put(file);
-
-                uploadTask.on(
-                    'state_changed',
-                    snapshot => {
-                        const progress =
-                            (snapshot.bytesTransferred / snapshot.totalBytes ||
-                                0) * 100;
-                        commit('setProgress', progress);
-                    },
-                    () => {
-                        // errrrrr
-                        commit('setStatus', 'error');
-                    },
-                    () => {
-                        // success
-                        commit('setStatus', 'complete');
-                    }
-                );
-            } catch (e) {
-                commit('setStatus', 'error');
-            }
         }
     },
     getters: {

@@ -1,19 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {
-    Dives,
-    DiveList,
-    MapView,
-    ChartView,
-    Demo,
-    SignIn,
-    NavView,
-    SignUp,
-    UploadView,
-    MainView,
-    DiveDetails,
-    ThanksView
-} from '~/pages';
+import {SignIn, NavView, UploadView, MainView, ThanksView} from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
 const readyPromise = store.getters['auth/readyPromise'];
