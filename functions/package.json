@@ -1,6 +1,7 @@
 {
   "name": "functions",
   "description": "Cloud Functions for Firebase",
+  "engines": {"node": "8"},
   "scripts": {
     "dev": "npm-run-all --parallel security-check test:watch",
     "lint": "eslint .",
