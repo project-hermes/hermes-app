@@ -30,7 +30,7 @@ export default {
     methods: {
         goToUploadPage() {
             this.$router.push({
-                name: 'upload'
+                name: 'main'
             });
         }
     },
