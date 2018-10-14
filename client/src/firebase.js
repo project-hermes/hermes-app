@@ -31,6 +31,9 @@ firebase.auth().onAuthStateChanged(user => {
             photoURL,
             isAnonymous
         } = user;
+
+        initializePendo(user);
+
         store.dispatch('auth/userChanged', {
             displayName,
             email,
@@ -60,4 +63,14 @@ function isLoggingIn(oldUser, newUser) {
 
 function isLoggingOut(oldUser, newUser) {
     return !!oldUser && !newUser;
+}
+
+function initializePendo({displayName, email, uid}) {
+    window.pendo.initialize({
+        visitor: {
+            id: uid,
+            email,
+            name: displayName
+        }
+    });
 }
