@@ -33,7 +33,9 @@ export default {
                 });
 
                 const diveRef = storageRef.child(
-                    `TEST-raw-dive-files/${user.uid}-${date + index}`
+                    process.env.NODE_ENV !== 'production'
+                        ? `TEST-raw-dive-files/${user.uid}-${date + index}`
+                        : `raw-dive-files/${user.uid}-${date + index}`
                 );
                 const uploadTask = diveRef.put(file);
                 promises.push(uploadTask);

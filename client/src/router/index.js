@@ -19,11 +19,6 @@ const router = new VueRouter({
                 next();
             }
         },
-        // {
-        //     path: '/sign-up',
-        //     name: 'signUp',
-        //     component: SignUp
-        // },
         {
             path: '/',
             component: NavView,
@@ -41,33 +36,6 @@ const router = new VueRouter({
                     name: 'thanks',
                     component: ThanksView
                 }
-                // {
-                //     path: '/quick',
-                //     component: Dives
-                // },
-                // {
-                //     path: '/dives',
-                //     name: 'dives',
-                //     component: DiveList
-                // },
-                // {
-                //     path: '/dives/:id',
-                //     name: 'diveDetails',
-                //     component: DiveDetails,
-                //     props: true
-                // },
-                // {
-                //     path: '/map',
-                //     component: MapView
-                // },
-                // {
-                //     path: '/charts',
-                //     component: ChartView
-                // },
-                // {
-                //     path: '/demo',
-                //     component: Demo
-                // }
             ]
         }
     ]
