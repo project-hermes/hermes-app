@@ -48,6 +48,7 @@ export default {
         signInWithGoogle() {
             this.authSignInWithGoogle().catch(err => {
                 this.error = err.message;
+                throw new Error (err.message);
             });
             this.resetError();
         },
