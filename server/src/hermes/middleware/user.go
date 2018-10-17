@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"model"
+	"hermes/model"
 	"net/http"
 )
 

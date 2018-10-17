@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	"middleware"
+	"hermes/middleware"
 )
 
 func ApiEntry(router *gin.Engine) {
@@ -17,8 +17,5 @@ func ApiEntry(router *gin.Engine) {
 
 		userGroup := appApi.Group("/user")
 		userGroup.GET("/:uid", middleware.GetUser)
-
-		authGroup := appApi.Group("/auth")
-		authGroup.GET("/", middleware.GetAuth)
 	}
 }

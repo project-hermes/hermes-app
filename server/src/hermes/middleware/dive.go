@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/appengine/datastore"
 
-	"model"
+	"hermes/model"
 	"net/http"
 	"time"
 )

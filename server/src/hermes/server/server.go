@@ -6,7 +6,7 @@ import (
 	"google.golang.org/api/option"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
-	"model"
+	"hermes/model"
 	"net/http"
 )
 
