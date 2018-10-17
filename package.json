@@ -54,7 +54,7 @@
         "jest": "^23.4.1",
         "jest-vue-preprocessor": "^1.4.0",
         "mini-css-extract-plugin": "^0.4.0",
-        "node-sass": "^4.9.3",
+        "node-sass": "^4.9.4",
         "postcss-loader": "^3.0.0",
         "prettier": "^1.12.1",
         "sass-loader": "^7.0.2",
