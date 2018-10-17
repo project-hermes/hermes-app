@@ -1,17 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {
-    Dives,
-    DiveList,
-    MapView,
-    ChartView,
-    Demo,
-    SignIn,
-    NavView,
-    SignUp,
-    MainView,
-    DiveDetails
-} from '~/pages';
+import {SignIn, NavView, UploadView, ThanksView} from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
 const readyPromise = store.getters['auth/readyPromise'];
@@ -31,11 +20,6 @@ const router = new VueRouter({
             }
         },
         {
-            path: '/sign-up',
-            name: 'signUp',
-            component: SignUp
-        },
-        {
             path: '/',
             component: NavView,
             meta: {
@@ -45,34 +29,12 @@ const router = new VueRouter({
                 {
                     path: '/',
                     name: 'main',
-                    component: MainView
+                    component: UploadView
                 },
                 {
-                    path: '/quick',
-                    component: Dives
-                },
-                {
-                    path: '/dives',
-                    name: 'dives',
-                    component: DiveList
-                },
-                {
-                    path: '/dives/:id',
-                    name: 'diveDetails',
-                    component: DiveDetails,
-                    props: true
-                },
-                {
-                    path: '/map',
-                    component: MapView
-                },
-                {
-                    path: '/charts',
-                    component: ChartView
-                },
-                {
-                    path: '/demo',
-                    component: Demo
+                    path: '/thank-you',
+                    name: 'thanks',
+                    component: ThanksView
                 }
             ]
         }

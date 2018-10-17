@@ -1,19 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="Project Hermes" />
-    <meta property="og:description" content="We're taking the temperature of the Ocean. Literally." />
-    <meta name="description" content="We're taking the temperature of the Ocean. Literally." />
-    <meta property="og:image" content="http://project-hermes.com/img/bg-logo.jpg" />
-    <meta property="og:image:width" content="2048" />
-    <meta property="og:image:height" content="972" />
-    <link href="https://fonts.googleapis.com/css?family=Lato|Poppins" rel="stylesheet">
-    <title>Hermes</title>
-  </head>
-  <body>
-  <div id="app">
-  </div>
-  <noscript>Project Hermes requires JavaScript to be enabled.</noscript>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:title" content="Project Hermes" />
+        <meta property="og:description" content="We're taking the temperature of the Ocean. Literally." />
+        <meta name="description" content="We're taking the temperature of the Ocean. Literally." />
+        <meta property="og:image" content="http://project-hermes.com/img/bg-logo.jpg" />
+        <meta property="og:image:width" content="2048" />
+        <meta property="og:image:height" content="972" />
+        <title>Hermes</title>
+        <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117428830-2"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-117428830-2');
+        </script>
+    </head>
+    <body>
+        <div id="app">
+            <script>
+                (function(apiKey){
+                    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=[];
+                    v=['initialize','identify','updateOptions','pageLoad'];for(w=0,x=v.length;w<x;++w)(function(m){
+                    o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+                    y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+                    z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+                })('b2e97c79-814e-45a6-40b0-721830fef45f');
+            </script>
+        </div>
+        <noscript>Project Hermes requires JavaScript to be enabled.</noscript>
+    </body>
 </html>

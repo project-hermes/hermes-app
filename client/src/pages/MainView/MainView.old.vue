@@ -1,6 +1,5 @@
 <template>
   <main class="main-view">
-    <!-- <NavBar class="main-view__nav"/> -->
     <div class="main-view__map-wrapper">
       <div
         :class="{'main-view__details__open': selectedDiveId}"
@@ -29,13 +28,12 @@
   </main>
 </template>
 <script>
-import {NavBar, SimpleMap, DiveInfoTable} from '~/components';
+import {SimpleMap, DiveInfoTable} from '~/components';
 import {mapActions} from 'vuex';
 import BarChartIcon from 'vue-feather-icons/icons/BarChartIcon';
 
 export default {
     components: {
-        NavBar,
         SimpleMap,
         DiveInfoTable,
         BarChartIcon

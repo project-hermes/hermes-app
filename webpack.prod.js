@@ -4,5 +4,10 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
     mode: 'production',
-    plugins: [new UglifyJsPlugin()]
+    plugins: [new UglifyJsPlugin()],
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.min'
+        }
+    }
 });
