@@ -65,10 +65,10 @@ function isLoggingOut(oldUser, newUser) {
     return !!oldUser && !newUser;
 }
 
-function initializePendo({displayName, email, uid}) {
+function initializePendo({displayName, email}) {
     window.pendo.initialize({
         visitor: {
-            id: uid,
+            id: email,
             email,
             name: displayName
         }

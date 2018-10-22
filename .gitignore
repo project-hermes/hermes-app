@@ -163,3 +163,5 @@ typings/
 
 public
 .DS_Store
+
+.firebase
