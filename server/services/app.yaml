@@ -1,12 +1,9 @@
-runtime: go
-api_version: go1
+runtime: go111
+service: default
 
 handlers:
-
+- url: /.*
+  script: auto
 - url: /
   static_files: index.html
   upload: index.html
-
-# All URLs are handled by the Go application script
-- url: /.*
-  script: _go_app
