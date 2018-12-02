@@ -1,0 +1,30 @@
+# You can pass a single schema file
+schema: server/graph/schema.graphql
+ 
+# Let gqlgen know where to put the generated server
+exec:
+  filename: server/graph/generated.go
+  package: graph
+
+# Let gqlgen know where to the generated models (if any)
+model:
+  filename: server/model/generated.go
+  package: model
+
+# Optional, turns on resolver stub generation
+resolver:
+  filename: server/graph/resolver.go # where to write them
+  type: Resolver  # whats the resolver root implementation type called?
+
+# Optional, turns on binding to field names by tag provided
+struct_tag: json
+
+models:
+#   User:
+#     model: github.com/project-hermes/hermes-app/server/models.User
+  Todo:
+    model: github.com/project-hermes/hermes-app/server/model.Todo
+#     fields:
+#       id:
+#         resolver: true # force a resolver to be generated
+#         fieldName: todoId # bind to a different go field name 
