@@ -4,6 +4,8 @@ import (
 	"html/template"
 
 	"github.com/gin-gonic/gin"
+	"github.com/99designs/gqlgen/handler"
+	"github.com/project-hermes/hermes-app/server/graph"
 )
 
 type templateParams struct {
@@ -26,6 +28,12 @@ func main() {
 
 	appGroup := router.Group("/")
 	appGroup.GET("/", helloForm)
+
+	gqlPlayground := gin.WrapH(handler.Playground("GraphQL playground", "/query"))
+	router.GET("/query", gqlPlayground)
+
+	gql := gin.WrapH(handler.GraphQL(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}})))
+	router.POST("/query", gql)
 	
 	router.Run()
 }
