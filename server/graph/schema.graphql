@@ -23,10 +23,20 @@
 #   createTodo(input: NewTodo!): Todo!
 # }
 
-type Query {
-  hello: Hello!
+type GeoPoint {
+  lat: Float!
+  long: Float!
 }
 
-type Hello {
-  name: String!
+type Dive {
+	name: String!
+	startTime: Int!
+  duration: Int!
+	startPoint: GeoPoint!
+  deltaPoints: [GeoPoint]!
+	endPoint: GeoPoint!
+}
+
+type Query {
+  dives: [Dive]!
 }

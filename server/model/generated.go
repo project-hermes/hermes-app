@@ -2,6 +2,7 @@
 
 package model
 
-type Hello struct {
-	Name string `json:"name"`
+type GeoPoint struct {
+	Lat  float64 `json:"lat"`
+	Long float64 `json:"long"`
 }

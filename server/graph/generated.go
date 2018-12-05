@@ -32,6 +32,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Dive() DiveResolver
 	Query() QueryResolver
 }
 
@@ -39,17 +40,30 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	Hello struct {
-		Name func(childComplexity int) int
+	Dive struct {
+		Name        func(childComplexity int) int
+		StartTime   func(childComplexity int) int
+		Duration    func(childComplexity int) int
+		StartPoint  func(childComplexity int) int
+		DeltaPoints func(childComplexity int) int
+		EndPoint    func(childComplexity int) int
+	}
+
+	GeoPoint struct {
+		Lat  func(childComplexity int) int
+		Long func(childComplexity int) int
 	}
 
 	Query struct {
-		Hello func(childComplexity int) int
+		Dives func(childComplexity int) int
 	}
 }
 
+type DiveResolver interface {
+	StartTime(ctx context.Context, obj *model.Dive) (int, error)
+}
 type QueryResolver interface {
-	Hello(ctx context.Context) (model.Hello, error)
+	Dives(ctx context.Context) ([]*model.Dive, error)
 }
 
 func field_Query___type_args(rawArgs map[string]interface{}) (map[string]interface{}, error) {
@@ -110,19 +124,68 @@ func (e *executableSchema) Schema() *ast.Schema {
 func (e *executableSchema) Complexity(typeName, field string, childComplexity int, rawArgs map[string]interface{}) (int, bool) {
 	switch typeName + "." + field {
 
-	case "Hello.name":
-		if e.complexity.Hello.Name == nil {
+	case "Dive.name":
+		if e.complexity.Dive.Name == nil {
 			break
 		}
 
-		return e.complexity.Hello.Name(childComplexity), true
+		return e.complexity.Dive.Name(childComplexity), true
 
-	case "Query.hello":
-		if e.complexity.Query.Hello == nil {
+	case "Dive.startTime":
+		if e.complexity.Dive.StartTime == nil {
 			break
 		}
 
-		return e.complexity.Query.Hello(childComplexity), true
+		return e.complexity.Dive.StartTime(childComplexity), true
+
+	case "Dive.duration":
+		if e.complexity.Dive.Duration == nil {
+			break
+		}
+
+		return e.complexity.Dive.Duration(childComplexity), true
+
+	case "Dive.startPoint":
+		if e.complexity.Dive.StartPoint == nil {
+			break
+		}
+
+		return e.complexity.Dive.StartPoint(childComplexity), true
+
+	case "Dive.deltaPoints":
+		if e.complexity.Dive.DeltaPoints == nil {
+			break
+		}
+
+		return e.complexity.Dive.DeltaPoints(childComplexity), true
+
+	case "Dive.endPoint":
+		if e.complexity.Dive.EndPoint == nil {
+			break
+		}
+
+		return e.complexity.Dive.EndPoint(childComplexity), true
+
+	case "GeoPoint.lat":
+		if e.complexity.GeoPoint.Lat == nil {
+			break
+		}
+
+		return e.complexity.GeoPoint.Lat(childComplexity), true
+
+	case "GeoPoint.long":
+		if e.complexity.GeoPoint.Long == nil {
+			break
+		}
+
+		return e.complexity.GeoPoint.Long(childComplexity), true
+
+	case "Query.dives":
+		if e.complexity.Query.Dives == nil {
+			break
+		}
+
+		return e.complexity.Query.Dives(childComplexity), true
 
 	}
 	return 0, false
@@ -157,12 +220,13 @@ type executionContext struct {
 	*executableSchema
 }
 
-var helloImplementors = []string{"Hello"}
+var diveImplementors = []string{"Dive"}
 
 // nolint: gocyclo, errcheck, gas, goconst
-func (ec *executionContext) _Hello(ctx context.Context, sel ast.SelectionSet, obj *model.Hello) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, helloImplementors)
+func (ec *executionContext) _Dive(ctx context.Context, sel ast.SelectionSet, obj *model.Dive) graphql.Marshaler {
+	fields := graphql.CollectFields(ctx, sel, diveImplementors)
 
+	var wg sync.WaitGroup
 	out := graphql.NewOrderedMap(len(fields))
 	invalid := false
 	for i, field := range fields {
@@ -170,9 +234,38 @@ func (ec *executionContext) _Hello(ctx context.Context, sel ast.SelectionSet, ob
 
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("Hello")
+			out.Values[i] = graphql.MarshalString("Dive")
 		case "name":
-			out.Values[i] = ec._Hello_name(ctx, field, obj)
+			out.Values[i] = ec._Dive_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "startTime":
+			wg.Add(1)
+			go func(i int, field graphql.CollectedField) {
+				out.Values[i] = ec._Dive_startTime(ctx, field, obj)
+				if out.Values[i] == graphql.Null {
+					invalid = true
+				}
+				wg.Done()
+			}(i, field)
+		case "duration":
+			out.Values[i] = ec._Dive_duration(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "startPoint":
+			out.Values[i] = ec._Dive_startPoint(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "deltaPoints":
+			out.Values[i] = ec._Dive_deltaPoints(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "endPoint":
+			out.Values[i] = ec._Dive_endPoint(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
@@ -180,7 +273,7 @@ func (ec *executionContext) _Hello(ctx context.Context, sel ast.SelectionSet, ob
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
 	}
-
+	wg.Wait()
 	if invalid {
 		return graphql.Null
 	}
@@ -188,11 +281,11 @@ func (ec *executionContext) _Hello(ctx context.Context, sel ast.SelectionSet, ob
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Hello_name(ctx context.Context, field graphql.CollectedField, obj *model.Hello) graphql.Marshaler {
+func (ec *executionContext) _Dive_name(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
-		Object: "Hello",
+		Object: "Dive",
 		Args:   nil,
 		Field:  field,
 	}
@@ -214,6 +307,269 @@ func (ec *executionContext) _Hello_name(ctx context.Context, field graphql.Colle
 	return graphql.MarshalString(res)
 }
 
+// nolint: vetshadow
+func (ec *executionContext) _Dive_startTime(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "Dive",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Dive().StartTime(rctx, obj)
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalInt(res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _Dive_duration(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "Dive",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Duration, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalInt(res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _Dive_startPoint(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "Dive",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartPoint, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.GeoPoint)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	return ec._GeoPoint(ctx, field.Selections, &res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _Dive_deltaPoints(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "Dive",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeltaPoints, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.GeoPoint)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	arr1 := make(graphql.Array, len(res))
+	var wg sync.WaitGroup
+
+	isLen1 := len(res) == 1
+	if !isLen1 {
+		wg.Add(len(res))
+	}
+
+	for idx1 := range res {
+		idx1 := idx1
+		rctx := &graphql.ResolverContext{
+			Index:  &idx1,
+			Result: res[idx1],
+		}
+		ctx := graphql.WithResolverContext(ctx, rctx)
+		f := func(idx1 int) {
+			if !isLen1 {
+				defer wg.Done()
+			}
+			arr1[idx1] = func() graphql.Marshaler {
+
+				if res[idx1] == nil {
+					return graphql.Null
+				}
+
+				return ec._GeoPoint(ctx, field.Selections, res[idx1])
+			}()
+		}
+		if isLen1 {
+			f(idx1)
+		} else {
+			go f(idx1)
+		}
+
+	}
+	wg.Wait()
+	return arr1
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _Dive_endPoint(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "Dive",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EndPoint, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.GeoPoint)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	return ec._GeoPoint(ctx, field.Selections, &res)
+}
+
+var geoPointImplementors = []string{"GeoPoint"}
+
+// nolint: gocyclo, errcheck, gas, goconst
+func (ec *executionContext) _GeoPoint(ctx context.Context, sel ast.SelectionSet, obj *model.GeoPoint) graphql.Marshaler {
+	fields := graphql.CollectFields(ctx, sel, geoPointImplementors)
+
+	out := graphql.NewOrderedMap(len(fields))
+	invalid := false
+	for i, field := range fields {
+		out.Keys[i] = field.Alias
+
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GeoPoint")
+		case "lat":
+			out.Values[i] = ec._GeoPoint_lat(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "long":
+			out.Values[i] = ec._GeoPoint_long(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+
+	if invalid {
+		return graphql.Null
+	}
+	return out
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _GeoPoint_lat(ctx context.Context, field graphql.CollectedField, obj *model.GeoPoint) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "GeoPoint",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Lat, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalFloat(res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _GeoPoint_long(ctx context.Context, field graphql.CollectedField, obj *model.GeoPoint) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "GeoPoint",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Long, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalFloat(res)
+}
+
 var queryImplementors = []string{"Query"}
 
 // nolint: gocyclo, errcheck, gas, goconst
@@ -233,10 +589,10 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "hello":
+		case "dives":
 			wg.Add(1)
 			go func(i int, field graphql.CollectedField) {
-				out.Values[i] = ec._Query_hello(ctx, field)
+				out.Values[i] = ec._Query_dives(ctx, field)
 				if out.Values[i] == graphql.Null {
 					invalid = true
 				}
@@ -258,7 +614,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Query_hello(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+func (ec *executionContext) _Query_dives(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -270,7 +626,7 @@ func (ec *executionContext) _Query_hello(ctx context.Context, field graphql.Coll
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Hello(rctx)
+		return ec.resolvers.Query().Dives(rctx)
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -278,11 +634,47 @@ func (ec *executionContext) _Query_hello(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.Hello)
+	res := resTmp.([]*model.Dive)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
-	return ec._Hello(ctx, field.Selections, &res)
+	arr1 := make(graphql.Array, len(res))
+	var wg sync.WaitGroup
+
+	isLen1 := len(res) == 1
+	if !isLen1 {
+		wg.Add(len(res))
+	}
+
+	for idx1 := range res {
+		idx1 := idx1
+		rctx := &graphql.ResolverContext{
+			Index:  &idx1,
+			Result: res[idx1],
+		}
+		ctx := graphql.WithResolverContext(ctx, rctx)
+		f := func(idx1 int) {
+			if !isLen1 {
+				defer wg.Done()
+			}
+			arr1[idx1] = func() graphql.Marshaler {
+
+				if res[idx1] == nil {
+					return graphql.Null
+				}
+
+				return ec._Dive(ctx, field.Selections, res[idx1])
+			}()
+		}
+		if isLen1 {
+			f(idx1)
+		} else {
+			go f(idx1)
+		}
+
+	}
+	wg.Wait()
+	return arr1
 }
 
 // nolint: vetshadow
@@ -1849,11 +2241,21 @@ var parsedSchema = gqlparser.MustLoadSchema(
 #   createTodo(input: NewTodo!): Todo!
 # }
 
-type Query {
-  hello: Hello!
+type GeoPoint {
+  lat: Float!
+  long: Float!
 }
 
-type Hello {
-  name: String!
+type Dive {
+	name: String!
+	startTime: Int!
+  duration: Int!
+	startPoint: GeoPoint!
+  deltaPoints: [GeoPoint]!
+	endPoint: GeoPoint!
+}
+
+type Query {
+  dives: [Dive]!
 }`},
 )

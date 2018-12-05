@@ -20,10 +20,8 @@ resolver:
 struct_tag: json
 
 models:
-#   User:
-#     model: github.com/project-hermes/hermes-app/server/models.User
-  Todo:
-    model: github.com/project-hermes/hermes-app/server/model.Todo
+  Dive:
+    model: github.com/project-hermes/hermes-app/server/model.Dive
 #     fields:
 #       id:
 #         resolver: true # force a resolver to be generated
