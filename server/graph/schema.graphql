@@ -31,10 +31,18 @@ type GeoPoint {
 type Dive {
 	sensorId: String!
 	startTime: Int!
-  duration: Int!
+  endTime: Int!
 	startPoint: GeoPoint!
-  deltaPoints: [GeoPoint]!
 	endPoint: GeoPoint!
+  sensorData: [SensorData]!
+}
+
+type SensorData {
+  depth: Float!
+  rawPressure: Int!
+  rawTemp: Int!
+  temp: Float!
+  time: Int!
 }
 
 type Query {

@@ -29,7 +29,12 @@ func (r *Resolver) Query() QueryResolver {
 type diveResolver struct{ *Resolver }
 
 func (r *diveResolver) StartTime(ctx context.Context, obj *model.Dive) (int, error) {
-	ms := time.Now().UnixNano() / int64(time.Millisecond)
+	ms := obj.StartTime.UnixNano() / int64(time.Millisecond)
+	return int(ms), nil
+}
+
+func (r *diveResolver) EndTime(ctx context.Context, obj *model.Dive) (int, error) {
+	ms := obj.EndTime.UnixNano() / int64(time.Millisecond)
 	return int(ms), nil
 }
 

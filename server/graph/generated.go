@@ -41,12 +41,11 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Dive struct {
-		Name        func(childComplexity int) int
-		StartTime   func(childComplexity int) int
-		Duration    func(childComplexity int) int
-		StartPoint  func(childComplexity int) int
-		DeltaPoints func(childComplexity int) int
-		EndPoint    func(childComplexity int) int
+		SensorId   func(childComplexity int) int
+		StartTime  func(childComplexity int) int
+		EndTime    func(childComplexity int) int
+		StartPoint func(childComplexity int) int
+		EndPoint   func(childComplexity int) int
 	}
 
 	GeoPoint struct {
@@ -61,6 +60,7 @@ type ComplexityRoot struct {
 
 type DiveResolver interface {
 	StartTime(ctx context.Context, obj *model.Dive) (int, error)
+	EndTime(ctx context.Context, obj *model.Dive) (int, error)
 }
 type QueryResolver interface {
 	Dives(ctx context.Context) ([]*model.Dive, error)
@@ -124,12 +124,12 @@ func (e *executableSchema) Schema() *ast.Schema {
 func (e *executableSchema) Complexity(typeName, field string, childComplexity int, rawArgs map[string]interface{}) (int, bool) {
 	switch typeName + "." + field {
 
-	case "Dive.name":
-		if e.complexity.Dive.Name == nil {
+	case "Dive.sensorId":
+		if e.complexity.Dive.SensorId == nil {
 			break
 		}
 
-		return e.complexity.Dive.Name(childComplexity), true
+		return e.complexity.Dive.SensorId(childComplexity), true
 
 	case "Dive.startTime":
 		if e.complexity.Dive.StartTime == nil {
@@ -138,12 +138,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Dive.StartTime(childComplexity), true
 
-	case "Dive.duration":
-		if e.complexity.Dive.Duration == nil {
+	case "Dive.endTime":
+		if e.complexity.Dive.EndTime == nil {
 			break
 		}
 
-		return e.complexity.Dive.Duration(childComplexity), true
+		return e.complexity.Dive.EndTime(childComplexity), true
 
 	case "Dive.startPoint":
 		if e.complexity.Dive.StartPoint == nil {
@@ -151,13 +151,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Dive.StartPoint(childComplexity), true
-
-	case "Dive.deltaPoints":
-		if e.complexity.Dive.DeltaPoints == nil {
-			break
-		}
-
-		return e.complexity.Dive.DeltaPoints(childComplexity), true
 
 	case "Dive.endPoint":
 		if e.complexity.Dive.EndPoint == nil {
@@ -235,8 +228,8 @@ func (ec *executionContext) _Dive(ctx context.Context, sel ast.SelectionSet, obj
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Dive")
-		case "name":
-			out.Values[i] = ec._Dive_name(ctx, field, obj)
+		case "sensorId":
+			out.Values[i] = ec._Dive_sensorId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
@@ -249,18 +242,17 @@ func (ec *executionContext) _Dive(ctx context.Context, sel ast.SelectionSet, obj
 				}
 				wg.Done()
 			}(i, field)
-		case "duration":
-			out.Values[i] = ec._Dive_duration(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalid = true
-			}
+		case "endTime":
+			wg.Add(1)
+			go func(i int, field graphql.CollectedField) {
+				out.Values[i] = ec._Dive_endTime(ctx, field, obj)
+				if out.Values[i] == graphql.Null {
+					invalid = true
+				}
+				wg.Done()
+			}(i, field)
 		case "startPoint":
 			out.Values[i] = ec._Dive_startPoint(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalid = true
-			}
-		case "deltaPoints":
-			out.Values[i] = ec._Dive_deltaPoints(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
@@ -281,7 +273,7 @@ func (ec *executionContext) _Dive(ctx context.Context, sel ast.SelectionSet, obj
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Dive_name(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+func (ec *executionContext) _Dive_sensorId(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -293,7 +285,7 @@ func (ec *executionContext) _Dive_name(ctx context.Context, field graphql.Collec
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return obj.SensorID, nil
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -335,7 +327,7 @@ func (ec *executionContext) _Dive_startTime(ctx context.Context, field graphql.C
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Dive_duration(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+func (ec *executionContext) _Dive_endTime(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -347,7 +339,7 @@ func (ec *executionContext) _Dive_duration(ctx context.Context, field graphql.Co
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Duration, nil
+		return ec.resolvers.Dive().EndTime(rctx, obj)
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -387,70 +379,6 @@ func (ec *executionContext) _Dive_startPoint(ctx context.Context, field graphql.
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
 	return ec._GeoPoint(ctx, field.Selections, &res)
-}
-
-// nolint: vetshadow
-func (ec *executionContext) _Dive_deltaPoints(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
-	ctx = ec.Tracer.StartFieldExecution(ctx, field)
-	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
-	rctx := &graphql.ResolverContext{
-		Object: "Dive",
-		Args:   nil,
-		Field:  field,
-	}
-	ctx = graphql.WithResolverContext(ctx, rctx)
-	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.DeltaPoints, nil
-	})
-	if resTmp == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*model.GeoPoint)
-	rctx.Result = res
-	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-
-	arr1 := make(graphql.Array, len(res))
-	var wg sync.WaitGroup
-
-	isLen1 := len(res) == 1
-	if !isLen1 {
-		wg.Add(len(res))
-	}
-
-	for idx1 := range res {
-		idx1 := idx1
-		rctx := &graphql.ResolverContext{
-			Index:  &idx1,
-			Result: res[idx1],
-		}
-		ctx := graphql.WithResolverContext(ctx, rctx)
-		f := func(idx1 int) {
-			if !isLen1 {
-				defer wg.Done()
-			}
-			arr1[idx1] = func() graphql.Marshaler {
-
-				if res[idx1] == nil {
-					return graphql.Null
-				}
-
-				return ec._GeoPoint(ctx, field.Selections, res[idx1])
-			}()
-		}
-		if isLen1 {
-			f(idx1)
-		} else {
-			go f(idx1)
-		}
-
-	}
-	wg.Wait()
-	return arr1
 }
 
 // nolint: vetshadow
@@ -2247,11 +2175,10 @@ type GeoPoint {
 }
 
 type Dive {
-	name: String!
+	sensorId: String!
 	startTime: Int!
-  duration: Int!
+  endTime: Int!
 	startPoint: GeoPoint!
-  deltaPoints: [GeoPoint]!
 	endPoint: GeoPoint!
 }
 

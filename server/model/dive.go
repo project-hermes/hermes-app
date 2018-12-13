@@ -7,6 +7,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
+	pblatlng "google.golang.org/genproto/googleapis/type/latlng"
 )
 
 // Dive is a dive
@@ -14,8 +15,23 @@ type Dive struct {
 	SensorID   string    `json:"sensorId" firestore:"sensorId,omitempty"`
 	StartTime  time.Time `json:"startTime"  firestore:"startTime,omitempty"`
 	EndTime    time.Time `json:"duration"  firestore:"endTime,omitempty"`
-	StartPoint GeoPoint  `json:"startPoint"`
-	EndPoint   GeoPoint  `json:"endPoint"`
+	StartPoint GeoPoint  `json:"startPoint" firestore:"startPoint,omitempty"`
+	EndPoint   GeoPoint  `json:"endPoint" firestore:"endPoint,omitempty"`
+}
+
+// MapDive will convert a map into a dive
+func MapDive(data map[string]interface{}) Dive {
+
+	startPoint := data["startPoint"].(*pblatlng.LatLng)
+	endPoint := data["endPoint"].(*pblatlng.LatLng)
+
+	return Dive {
+		SensorID: data["sensorId"].(string),
+		StartTime: data["startTime"].(time.Time),
+		EndTime: data["endTime"].(time.Time),
+		StartPoint: GeoPoint{Lat: startPoint.Latitude, Long: startPoint.Longitude},
+		EndPoint: GeoPoint{Lat: endPoint.Latitude, Long: endPoint.Longitude},
+	}
 }
 
 // DiveInterface is an interface for interacting with dive results
@@ -50,13 +66,9 @@ func (di DiveImplementation) List(ctx context.Context) []*Dive {
 			log.Fatalf("failed to iterate: %v", err)
 		}
 
-		var d Dive
-		mapError := doc.DataTo(&d)
-		if mapError != nil {
-			log.Fatalf("unable to map doc to dive: %v", err)
-		}
+		dive := MapDive(doc.Data())
 
-		dives = append(dives, &d)
+		dives = append(dives, &dive)
 	}
 
 	return dives
