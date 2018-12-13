@@ -26,9 +26,11 @@ exports.processDive = functions.https.onRequest((req, res) => {
         startPoint: new admin.firestore.GeoPoint(body.startLat, body.startLong),
         endPoint: new admin.firestore.GeoPoint(body.endLat, body.endLong),
         sensorId: body.sensorId,
+        createdAt: moment().toDate(),
         startTime: moment(body.startTime).toDate(),
         endTime: moment(body.endTime).toDate(),
-        stringExample: 'path to GCS data'
+        sensorData: body.readings, 
+        filePath: 'path to GCS data'
     };
 
     const document = firestore.collection('dive').doc();
