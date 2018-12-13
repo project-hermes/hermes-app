@@ -29,7 +29,7 @@ type GeoPoint {
 }
 
 type Dive {
-	name: String!
+	sensorId: String!
 	startTime: Int!
   duration: Int!
 	startPoint: GeoPoint!

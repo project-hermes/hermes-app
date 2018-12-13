@@ -4,10 +4,20 @@ import (
 	"time"
 	"context"
 
+	
 	"github.com/project-hermes/hermes-app/server/model"
 )
 
-type Resolver struct{}
+type Resolver struct{
+	diveInt model.DiveInterface
+}
+
+// NewResolver will return a resolver with all the necessary dependencies
+func NewResolver(diveInt model.DiveInterface) Resolver {
+	return Resolver{
+		diveInt: diveInt,
+	}
+}
 
 func (r *Resolver) Dive() DiveResolver {
 	return &diveResolver{r}
@@ -26,10 +36,5 @@ func (r *diveResolver) StartTime(ctx context.Context, obj *model.Dive) (int, err
 type queryResolver struct{ *Resolver }
 
 func (r *queryResolver) Dives(ctx context.Context) ([]*model.Dive, error) {
-	return []*model.Dive{
-		&model.Dive{
-			Name: "Test Dive",
-			StartTime: time.Now(),
-		},
-	}, nil
+	return r.diveInt.List(ctx), nil
 }
