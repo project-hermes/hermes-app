@@ -21,8 +21,13 @@ const StorageController = function (storageInt, fs) {
         return fileDownload;
     };
 
+    const writeFile = function* (data) {
+        
+    }
+
     return {
-        readFile
+        readFile,
+        writeFile
     };
 };
 
