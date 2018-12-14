@@ -5,9 +5,10 @@ import (
 	"log"
 	"time"
 
-	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
 	pblatlng "google.golang.org/genproto/googleapis/type/latlng"
+
+	"github.com/project-hermes/hermes-app/server/wrapper"
 )
 
 // FirestoreDive
@@ -29,12 +30,12 @@ import (
 
 // Dive is a dive
 type Dive struct {
-	SensorID   string    `json:"sensorId" firestore:"sensorId,omitempty"`
-	StartTime  time.Time `json:"startTime"  firestore:"startTime,omitempty"`
-	EndTime    time.Time `json:"duration"  firestore:"endTime,omitempty"`
-	StartPoint GeoPoint  `json:"startPoint" firestore:"startPoint,omitempty"`
-	EndPoint   GeoPoint  `json:"endPoint" firestore:"endPoint,omitempty"`
-	SensorData   []*SensorData  `json:"sensorData" firestore:"sensorData,omitempty"`
+	SensorID   string        `json:"sensorId" firestore:"sensorId,omitempty"`
+	StartTime  time.Time     `json:"startTime"  firestore:"startTime,omitempty"`
+	EndTime    time.Time     `json:"duration"  firestore:"endTime,omitempty"`
+	StartPoint GeoPoint      `json:"startPoint" firestore:"startPoint,omitempty"`
+	EndPoint   GeoPoint      `json:"endPoint" firestore:"endPoint,omitempty"`
+	SensorData []*SensorData `json:"sensorData" firestore:"sensorData,omitempty"`
 }
 
 // MapDive will convert a map into a dive
@@ -51,13 +52,13 @@ func MapDive(data map[string]interface{}) Dive {
 		sensorData = append(sensorData, &newSd)
 	}
 
-	return Dive {
-		SensorID: data["sensorId"].(string),
+	return Dive{
+		SensorID:   data["sensorId"].(string),
 		SensorData: sensorData,
-		StartTime: data["startTime"].(time.Time),
-		EndTime: data["endTime"].(time.Time),
+		StartTime:  data["startTime"].(time.Time),
+		EndTime:    data["endTime"].(time.Time),
 		StartPoint: GeoPoint{Lat: startPoint.Latitude, Long: startPoint.Longitude},
-		EndPoint: GeoPoint{Lat: endPoint.Latitude, Long: endPoint.Longitude},
+		EndPoint:   GeoPoint{Lat: endPoint.Latitude, Long: endPoint.Longitude},
 	}
 }
 
@@ -69,11 +70,11 @@ type DiveInterface interface {
 
 // DiveImplementation is an object for CRUD operations on dives
 type DiveImplementation struct {
-	client *firestore.Client
+	client wrapper.DBClientInterface
 }
 
 // NewDiveImplementation will return an object for working with dives
-func NewDiveImplementation(client *firestore.Client) DiveInterface {
+func NewDiveImplementation(client wrapper.DBClientInterface) DiveInterface {
 	return &DiveImplementation{
 		client: client,
 	}

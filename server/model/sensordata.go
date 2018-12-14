@@ -1,9 +1,5 @@
 package model
 
-import (
-	
-)
-
 // parseToFloat will take an unknown value and attempt to make it a float64
 func parseToFloat(value interface{}) float64 {
 	switch v := value.(type) {
@@ -20,11 +16,11 @@ func parseToFloat(value interface{}) float64 {
 
 // MapSensorData will convert map to SensorData object
 func MapSensorData(data map[string]interface{}) SensorData {
-	return SensorData {
-		Depth: parseToFloat(data["depth"]),
+	return SensorData{
+		Depth:       parseToFloat(data["depth"]),
 		RawPressure: int(data["rawPressure"].(int64)),
-		RawTemp: int(data["rawTemp"].(int64)),
-		Temp: parseToFloat(data["temp"]),
-		Time: int(data["time"].(int64)),
+		RawTemp:     int(data["rawTemp"].(int64)),
+		Temp:        parseToFloat(data["temp"]),
+		Time:        int(data["time"].(int64)),
 	}
 }

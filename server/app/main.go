@@ -4,19 +4,18 @@ import (
 	"context"
 	"errors"
 	"html/template"
-	"net/http"
 	"log"
+	"net/http"
 	"time"
 
-	"cloud.google.com/go/firestore"
 	"firebase.google.com/go"
-	"github.com/gin-gonic/gin"
-	"google.golang.org/api/option"
 	"github.com/99designs/gqlgen/handler"
+	"github.com/gin-gonic/gin"
 	"github.com/project-hermes/hermes-app/server/graph"
+	"google.golang.org/api/option"
 
 	"github.com/project-hermes/hermes-app/server/model"
-
+	"github.com/project-hermes/hermes-app/server/wrapper"
 )
 
 const (
@@ -26,7 +25,7 @@ const (
 
 type templateParams struct {
 	Notice string
-	Name string
+	Name   string
 }
 
 var (
@@ -49,13 +48,13 @@ func main() {
 	gqlPlayground := gin.WrapH(handler.Playground("GraphQL playground", "/query"))
 	router.GET("/query", gqlPlayground)
 
-	fsClient, _ := firestore.NewClient(context.Background(), "project-hermes-staging")
-	diveInt := model.NewDiveImplementation(fsClient)
+	dbClient, _ := wrapper.NewClient(context.Background(), "project-hermes-staging")
+	diveInt := model.NewDiveImplementation(dbClient)
 
 	resolver := graph.NewResolver(diveInt)
 	gql := gin.WrapH(handler.GraphQL(graph.NewExecutableSchema(graph.Config{Resolvers: &resolver})))
 	router.POST("/query", gql)
-	
+
 	router.Run()
 }
 
@@ -75,13 +74,13 @@ func InjectFirebase(c *gin.Context) {
 	databaseURL := "https://project-hermes-staging.firebaseio.com"
 	config := &firebase.Config{
 		DatabaseURL: databaseURL,
-		ProjectID: "project-hermes-staging",
+		ProjectID:   "project-hermes-staging",
 	}
 
 	if app, err := firebase.NewApp(ctx, config, opt); err != nil {
 		log.Fatalf("Unable to load firebase app: %s", err)
 		c.AbortWithError(http.StatusServiceUnavailable, errors.New("an error occurred while processing your request"))
-	}  else {
+	} else {
 		c.Keys[FirebaseApp] = app
 		c.Next()
 	}

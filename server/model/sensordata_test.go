@@ -19,13 +19,13 @@ var _ = Describe("SensorData Tests", func() {
 	Context("valid map firestore data to dive", func() {
 		BeforeEach(func() {
 			data := map[string]interface{}{
-				"depth": float64(789.987),
+				"depth":       float64(789.987),
 				"rawPressure": int64(12345),
-				"rawTemp": int64(23456),
-				"temp": float64(123.45),
-				"time": int64(34567),
+				"rawTemp":     int64(23456),
+				"temp":        float64(123.45),
+				"time":        int64(34567),
 			}
-			
+
 			sensorData = MapSensorData(data)
 		})
 
@@ -62,8 +62,8 @@ var _ = Describe("SensorData Tests", func() {
 		BeforeEach(func() {
 			data = map[string]interface{}{
 				"rawPressure": int64(12345),
-				"rawTemp": int64(23456),
-				"time": int64(34567),
+				"rawTemp":     int64(23456),
+				"time":        int64(34567),
 			}
 		})
 

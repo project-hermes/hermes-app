@@ -1,14 +1,13 @@
 package graph
 
 import (
-	"time"
 	"context"
+	"time"
 
-	
 	"github.com/project-hermes/hermes-app/server/model"
 )
 
-type Resolver struct{
+type Resolver struct {
 	diveInt model.DiveInterface
 }
 
