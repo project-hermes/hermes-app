@@ -46,6 +46,7 @@ type ComplexityRoot struct {
 		EndTime    func(childComplexity int) int
 		StartPoint func(childComplexity int) int
 		EndPoint   func(childComplexity int) int
+		SensorData func(childComplexity int) int
 	}
 
 	GeoPoint struct {
@@ -55,6 +56,14 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Dives func(childComplexity int) int
+	}
+
+	SensorData struct {
+		Depth       func(childComplexity int) int
+		RawPressure func(childComplexity int) int
+		RawTemp     func(childComplexity int) int
+		Temp        func(childComplexity int) int
+		Time        func(childComplexity int) int
 	}
 }
 
@@ -159,6 +168,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Dive.EndPoint(childComplexity), true
 
+	case "Dive.sensorData":
+		if e.complexity.Dive.SensorData == nil {
+			break
+		}
+
+		return e.complexity.Dive.SensorData(childComplexity), true
+
 	case "GeoPoint.lat":
 		if e.complexity.GeoPoint.Lat == nil {
 			break
@@ -179,6 +195,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Dives(childComplexity), true
+
+	case "SensorData.depth":
+		if e.complexity.SensorData.Depth == nil {
+			break
+		}
+
+		return e.complexity.SensorData.Depth(childComplexity), true
+
+	case "SensorData.rawPressure":
+		if e.complexity.SensorData.RawPressure == nil {
+			break
+		}
+
+		return e.complexity.SensorData.RawPressure(childComplexity), true
+
+	case "SensorData.rawTemp":
+		if e.complexity.SensorData.RawTemp == nil {
+			break
+		}
+
+		return e.complexity.SensorData.RawTemp(childComplexity), true
+
+	case "SensorData.temp":
+		if e.complexity.SensorData.Temp == nil {
+			break
+		}
+
+		return e.complexity.SensorData.Temp(childComplexity), true
+
+	case "SensorData.time":
+		if e.complexity.SensorData.Time == nil {
+			break
+		}
+
+		return e.complexity.SensorData.Time(childComplexity), true
 
 	}
 	return 0, false
@@ -258,6 +309,11 @@ func (ec *executionContext) _Dive(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "endPoint":
 			out.Values[i] = ec._Dive_endPoint(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "sensorData":
+			out.Values[i] = ec._Dive_sensorData(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
@@ -407,6 +463,70 @@ func (ec *executionContext) _Dive_endPoint(ctx context.Context, field graphql.Co
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
 	return ec._GeoPoint(ctx, field.Selections, &res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _Dive_sensorData(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "Dive",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SensorData, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SensorData)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	arr1 := make(graphql.Array, len(res))
+	var wg sync.WaitGroup
+
+	isLen1 := len(res) == 1
+	if !isLen1 {
+		wg.Add(len(res))
+	}
+
+	for idx1 := range res {
+		idx1 := idx1
+		rctx := &graphql.ResolverContext{
+			Index:  &idx1,
+			Result: res[idx1],
+		}
+		ctx := graphql.WithResolverContext(ctx, rctx)
+		f := func(idx1 int) {
+			if !isLen1 {
+				defer wg.Done()
+			}
+			arr1[idx1] = func() graphql.Marshaler {
+
+				if res[idx1] == nil {
+					return graphql.Null
+				}
+
+				return ec._SensorData(ctx, field.Selections, res[idx1])
+			}()
+		}
+		if isLen1 {
+			f(idx1)
+		} else {
+			go f(idx1)
+		}
+
+	}
+	wg.Wait()
+	return arr1
 }
 
 var geoPointImplementors = []string{"GeoPoint"}
@@ -667,6 +787,191 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	}
 
 	return ec.___Schema(ctx, field.Selections, res)
+}
+
+var sensorDataImplementors = []string{"SensorData"}
+
+// nolint: gocyclo, errcheck, gas, goconst
+func (ec *executionContext) _SensorData(ctx context.Context, sel ast.SelectionSet, obj *model.SensorData) graphql.Marshaler {
+	fields := graphql.CollectFields(ctx, sel, sensorDataImplementors)
+
+	out := graphql.NewOrderedMap(len(fields))
+	invalid := false
+	for i, field := range fields {
+		out.Keys[i] = field.Alias
+
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SensorData")
+		case "depth":
+			out.Values[i] = ec._SensorData_depth(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "rawPressure":
+			out.Values[i] = ec._SensorData_rawPressure(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "rawTemp":
+			out.Values[i] = ec._SensorData_rawTemp(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "temp":
+			out.Values[i] = ec._SensorData_temp(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		case "time":
+			out.Values[i] = ec._SensorData_time(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+
+	if invalid {
+		return graphql.Null
+	}
+	return out
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _SensorData_depth(ctx context.Context, field graphql.CollectedField, obj *model.SensorData) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "SensorData",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Depth, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalFloat(res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _SensorData_rawPressure(ctx context.Context, field graphql.CollectedField, obj *model.SensorData) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "SensorData",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RawPressure, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalInt(res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _SensorData_rawTemp(ctx context.Context, field graphql.CollectedField, obj *model.SensorData) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "SensorData",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RawTemp, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalInt(res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _SensorData_temp(ctx context.Context, field graphql.CollectedField, obj *model.SensorData) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "SensorData",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Temp, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalFloat(res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _SensorData_time(ctx context.Context, field graphql.CollectedField, obj *model.SensorData) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "SensorData",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Time, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+	return graphql.MarshalInt(res)
 }
 
 var __DirectiveImplementors = []string{"__Directive"}
@@ -2180,6 +2485,15 @@ type Dive {
   endTime: Int!
 	startPoint: GeoPoint!
 	endPoint: GeoPoint!
+  sensorData: [SensorData]!
+}
+
+type SensorData {
+  depth: Float!
+  rawPressure: Int!
+  rawTemp: Int!
+  temp: Float!
+  time: Int!
 }
 
 type Query {

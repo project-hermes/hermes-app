@@ -6,7 +6,7 @@ exec:
   filename: server/graph/generated.go
   package: graph
 
-# Let gqlgen know where to the generated models (if any)
+# Let gqlgen know where to put the generated models
 model:
   filename: server/model/generated.go
   package: model

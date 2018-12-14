@@ -6,3 +6,11 @@ type GeoPoint struct {
 	Lat  float64 `json:"lat"`
 	Long float64 `json:"long"`
 }
+
+type SensorData struct {
+	Depth       float64 `json:"depth"`
+	RawPressure int     `json:"rawPressure"`
+	RawTemp     int     `json:"rawTemp"`
+	Temp        float64 `json:"temp"`
+	Time        int     `json:"time"`
+}

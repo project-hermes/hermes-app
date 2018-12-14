@@ -2,6 +2,7 @@ package model_test
 
 import (
 	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -11,9 +12,9 @@ import (
 
 var _ = Describe("Dive Tests", func() {
 	var (
-		dive Dive
+		dive      Dive
 		startTime time.Time
-		endTime time.Time
+		endTime   time.Time
 	)
 
 	AfterEach(func() {
@@ -23,21 +24,30 @@ var _ = Describe("Dive Tests", func() {
 	Context("valid map firestore data to dive", func() {
 		BeforeEach(func() {
 			endTime = time.Now()
-			startTime = endTime.Add(-1*time.Hour)
+			startTime = endTime.Add(-1 * time.Hour)
 			data := map[string]interface{}{
-				"sensorId": "test123",
+				"sensorId":  "test123",
 				"startTime": startTime,
-				"endTime": endTime,
+				"endTime":   endTime,
 				"startPoint": &pblatlng.LatLng{
-					Latitude: -12.345,
+					Latitude:  -12.345,
 					Longitude: 32.45,
 				},
 				"endPoint": &pblatlng.LatLng{
-					Latitude: 45.67,
+					Latitude:  45.67,
 					Longitude: -32.45,
 				},
+				"sensorData": []interface{}{
+					map[string]interface{}{
+						"depth":       float64(789.987),
+						"rawPressure": int64(12345),
+						"rawTemp":     int64(23456),
+						"temp":        float64(123.45),
+						"time":        int64(34567),
+					},
+				},
 			}
-			
+
 			dive = MapDive(data)
 		})
 
@@ -67,6 +77,10 @@ var _ = Describe("Dive Tests", func() {
 
 		It("endTime to endTime", func() {
 			Expect(dive.EndTime).To(Equal(endTime))
+		})
+
+		It("sensorData is parsed and added", func() {
+			// skipped
 		})
 	})
 })
