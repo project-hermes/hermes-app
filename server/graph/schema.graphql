@@ -1,0 +1,25 @@
+type GeoPoint {
+  lat: Float!
+  long: Float!
+}
+
+type Dive {
+	sensorId: String!
+	startTime: Int!
+  endTime: Int!
+	startPoint: GeoPoint!
+	endPoint: GeoPoint!
+  sensorData: [SensorData]!
+}
+
+type SensorData {
+  depth: Float!
+  rawPressure: Int!
+  rawTemp: Int!
+  temp: Float!
+  time: Int!
+}
+
+type Query {
+  dives: [Dive]!
+}

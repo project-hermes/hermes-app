@@ -1,0 +1,12 @@
+runtime: go111
+service: default
+
+automatic_scaling:
+  min_instances: 0
+
+handlers:
+- url: /.*
+  script: auto
+- url: /
+  static_files: index.html
+  upload: index.html

@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	"middleware"
+	"github.com/project-hermes/hermes-app/server/hermes/middleware"
 )
 
 func ApiEntry(router *gin.Engine) {
