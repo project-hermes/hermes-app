@@ -18,7 +18,7 @@ type DBClient struct {
 
 // Collection will return a collection reference
 func (dbc DBClient) Collection(path string) CollectionRefInterface {
-	return CollectionRef {
+	return CollectionRef{
 		collection: dbc.client.Collection(path),
 	}
 }
@@ -61,7 +61,3 @@ type DocRefInterface interface {
 type DocumentInteratorInterface interface {
 	Next() (*firestore.DocumentSnapshot, error)
 }
-
-
-
-

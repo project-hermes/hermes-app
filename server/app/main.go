@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"firebase.google.com/go"
+	"firebase.google.com/go/auth"
 	"github.com/99designs/gqlgen/handler"
 	"github.com/gin-gonic/gin"
 	"github.com/project-hermes/hermes-app/server/graph"
@@ -21,6 +22,9 @@ import (
 const (
 	// FirebaseApp is a constant for pulling app from gin
 	FirebaseApp = "FirebaseApp"
+
+	// FirebaseAuth is a constant for pulling auth from gin
+	FirebaseAuth = "FirebaseAuth"
 )
 
 type templateParams struct {
@@ -83,5 +87,37 @@ func InjectFirebase(c *gin.Context) {
 	} else {
 		c.Keys[FirebaseApp] = app
 		c.Next()
+	}
+}
+
+// InjectFirebaseAuthClient will inject the firebase auth
+func InjectFirebaseAuthClient(c *gin.Context) {
+	log.Printf("Loading firebase auth client")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	if app, ok := c.Keys[FirebaseApp].(*firebase.App); !ok {
+		log.Fatalf("Could not get firebase app")
+	} else if authClient, err := app.Auth(ctx); err != nil {
+		log.Fatalf("Unable to create auth client: %v", err)
+	} else {
+		c.Keys[FirebaseAuth] = authClient
+		c.Next()
+	}
+}
+
+func verifyIDToken(c *gin.Context, app *firebase.App, idToken string) *auth.Token {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	if authClient, ok := c.Keys[FirebaseAuth].(*auth.Client); !ok {
+		log.Fatalf("Could not get firebase app")
+		c.AbortWithError(http.StatusInternalServerError, errors.New("an issue occurred on the server"))
+		return nil
+	} else if token, err := authClient.VerifyIDToken(ctx, idToken); err != nil {
+		log.Fatalf("error verifying ID token: %v", err)
+		c.AbortWithError(http.StatusForbidden, errors.New("unauthorized"))
+		return nil
+	} else {
+		log.Printf("Verified ID Token: %v", token)
+		return token
 	}
 }
