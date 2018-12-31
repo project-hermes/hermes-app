@@ -83,8 +83,7 @@ func NewDiveImplementation(client wrapper.DBClientInterface) DiveInterface {
 // Create will create a new dive
 func (di DiveImplementation) Create(ctx context.Context, dive Dive) error {
 	docRef := di.client.Collection("dive").NewDoc()
-	_, err := docRef.Set(ctx, dive)
-	if err != nil {
+	if _, err := docRef.Set(ctx, dive); err != nil {
 		log.Printf("An error has occurred: %s", err)
 		return err
 	}

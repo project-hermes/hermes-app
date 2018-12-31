@@ -2,6 +2,8 @@ setup:
 	go get golang.org/x/sys
 	go get golang.org/x/oauth
 	go get golang.org/x/text
+	go get firebase.google.com/go
+	go get github.com/gin-gonic/gin
 	go get github.com/99designs/gqlgen
 	go get github.com/onsi/ginkgo/ginkgo
 	go get github.com/onsi/gomega/...

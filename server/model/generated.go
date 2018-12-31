@@ -2,9 +2,22 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type GeoPoint struct {
 	Lat  float64 `json:"lat"`
 	Long float64 `json:"long"`
+}
+
+type InputSensor struct {
+	SensorID string `json:"sensorId"`
+	Name     string `json:"name"`
+	Type     string `json:"type"`
+	Model    string `json:"model"`
 }
 
 type SensorData struct {
@@ -13,4 +26,42 @@ type SensorData struct {
 	RawTemp     int     `json:"rawTemp"`
 	Temp        float64 `json:"temp"`
 	Time        int     `json:"time"`
+}
+
+type SensorStatus string
+
+const (
+	SensorStatusActive   SensorStatus = "ACTIVE"
+	SensorStatusInactive SensorStatus = "INACTIVE"
+	SensorStatusDisabled SensorStatus = "DISABLED"
+	SensorStatusUnknown  SensorStatus = "UNKNOWN"
+)
+
+func (e SensorStatus) IsValid() bool {
+	switch e {
+	case SensorStatusActive, SensorStatusInactive, SensorStatusDisabled, SensorStatusUnknown:
+		return true
+	}
+	return false
+}
+
+func (e SensorStatus) String() string {
+	return string(e)
+}
+
+func (e *SensorStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SensorStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SensorStatus", str)
+	}
+	return nil
+}
+
+func (e SensorStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

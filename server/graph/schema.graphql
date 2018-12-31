@@ -6,10 +6,25 @@ type GeoPoint {
 type Dive {
 	sensorId: String!
 	startTime: Int!
-  endTime: Int!
+    endTime: Int!
 	startPoint: GeoPoint!
 	endPoint: GeoPoint!
-  sensorData: [SensorData]!
+    sensorData: [SensorData]!
+}
+
+enum SensorStatus {
+    ACTIVE
+    INACTIVE
+    DISABLED
+    UNKNOWN
+}
+
+type Sensor {
+  id: ID!
+  name: String!
+  type: String!
+  model: String!
+  status: SensorStatus!
 }
 
 type SensorData {
@@ -21,5 +36,18 @@ type SensorData {
 }
 
 type Query {
+  "This will fetch all dives"
   dives: [Dive]!
+}
+
+input InputSensor {
+  sensorId: String!
+  name: String!
+  type: String!
+  model: String!
+}
+
+type Mutation {
+  "This will register a new sensor"
+  sensorCreate(sensor: InputSensor!): Sensor!
 }

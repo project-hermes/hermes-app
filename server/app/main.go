@@ -54,8 +54,9 @@ func main() {
 
 	dbClient, _ := wrapper.NewClient(context.Background(), "project-hermes-staging")
 	diveInt := model.NewDiveImplementation(dbClient)
+	sensorInt := model.NewSensorImplementation(dbClient)
 
-	resolver := graph.NewResolver(diveInt)
+	resolver := graph.NewResolver(diveInt, sensorInt)
 	gql := gin.WrapH(handler.GraphQL(graph.NewExecutableSchema(graph.Config{Resolvers: &resolver})))
 	router.POST("/query", gql)
 

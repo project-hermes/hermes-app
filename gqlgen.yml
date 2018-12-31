@@ -13,7 +13,7 @@ model:
 
 # Optional, turns on resolver stub generation
 resolver:
-  filename: server/graph/resolver.go # where to write them
+  filename: server/graph/resolver_stub.go # where to write them
   type: Resolver  # whats the resolver root implementation type called?
 
 # Optional, turns on binding to field names by tag provided
@@ -22,6 +22,8 @@ struct_tag: json
 models:
   Dive:
     model: github.com/project-hermes/hermes-app/server/model.Dive
+  Sensor:
+    model: github.com/project-hermes/hermes-app/server/model.Sensor
 #     fields:
 #       id:
 #         resolver: true # force a resolver to be generated

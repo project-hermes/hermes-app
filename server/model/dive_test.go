@@ -1,28 +1,82 @@
 package model_test
 
 import (
+	"context"
+	"errors"
 	"time"
 
+	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	. "github.com/project-hermes/hermes-app/server/model"
+	"github.com/project-hermes/hermes-app/server/wrapper/mock"
 	pblatlng "google.golang.org/genproto/googleapis/type/latlng"
 )
 
 var _ = Describe("Dive Tests", func() {
 	var (
-		dive      Dive
-		startTime time.Time
-		endTime   time.Time
+		dive       Dive
+
+		startTime  time.Time
+		endTime    time.Time
 	)
 
 	AfterEach(func() {
 		dive = Dive{}
 	})
 
+	Describe("dive implementation", func() {
+		var (
+			mockCtrl   *gomock.Controller
+			mockClient *mock_wrapper.MockDBClientInterface
+			mockCollectionRef *mock_wrapper.MockCollectionRefInterface
+			mockDocRef *mock_wrapper.MockDocRefInterface
+			diveInt DiveInterface
+		)
+
+		BeforeEach(func() {
+			mockCtrl = gomock.NewController(GinkgoT())
+			mockClient = mock_wrapper.NewMockDBClientInterface(mockCtrl)
+			mockCollectionRef = mock_wrapper.NewMockCollectionRefInterface(mockCtrl)
+			mockDocRef = mock_wrapper.NewMockDocRefInterface(mockCtrl)
+			diveInt = NewDiveImplementation(mockClient)
+		})
+
+		AfterEach(func() {
+			mockCtrl.Finish()
+		})
+
+		Context("create dive", func() {
+			It("is successful returns nil error", func() {
+				ctx := context.Background()
+				dive := Dive{
+					SensorID: "test_sensor",
+				}
+				mockClient.EXPECT().Collection(gomock.Eq("dive")).Return(mockCollectionRef).Times(1)
+				mockCollectionRef.EXPECT().NewDoc().Return(mockDocRef).Times(1)
+				mockDocRef.EXPECT().Set(gomock.Eq(ctx), gomock.Eq(dive)).Return(nil, nil).Times(1)
+				err := diveInt.Create(ctx, dive)
+				Expect(err).To(BeNil())
+			})
+
+			It("doc ref set returns error", func() {
+				ctx := context.Background()
+				dive := Dive{
+					SensorID: "test_sensor",
+				}
+				mockClient.EXPECT().Collection(gomock.Eq("dive")).Return(mockCollectionRef).Times(1)
+				mockCollectionRef.EXPECT().NewDoc().Return(mockDocRef).Times(1)
+				mockDocRef.EXPECT().Set(gomock.Eq(ctx), dive).Return(nil, errors.New("ka-boom")).Times(1)
+				err := diveInt.Create(ctx, dive)
+				Expect(err).To(Equal(errors.New("ka-boom")))
+			})
+		})
+	})
+
 	Context("valid map firestore data to dive", func() {
 		BeforeEach(func() {
+
 			endTime = time.Now()
 			startTime = endTime.Add(-1 * time.Hour)
 			data := map[string]interface{}{

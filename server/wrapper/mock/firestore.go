@@ -37,6 +37,7 @@ func (m *MockDBClientInterface) EXPECT() *MockDBClientInterfaceMockRecorder {
 
 // Collection mocks base method
 func (m *MockDBClientInterface) Collection(arg0 string) wrapper.CollectionRefInterface {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Collection", arg0)
 	ret0, _ := ret[0].(wrapper.CollectionRefInterface)
 	return ret0
@@ -44,6 +45,7 @@ func (m *MockDBClientInterface) Collection(arg0 string) wrapper.CollectionRefInt
 
 // Collection indicates an expected call of Collection
 func (mr *MockDBClientInterfaceMockRecorder) Collection(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Collection", reflect.TypeOf((*MockDBClientInterface)(nil).Collection), arg0)
 }
 
@@ -70,8 +72,23 @@ func (m *MockCollectionRefInterface) EXPECT() *MockCollectionRefInterfaceMockRec
 	return m.recorder
 }
 
+// Doc mocks base method
+func (m *MockCollectionRefInterface) Doc(arg0 string) wrapper.DocRefInterface {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Doc", arg0)
+	ret0, _ := ret[0].(wrapper.DocRefInterface)
+	return ret0
+}
+
+// Doc indicates an expected call of Doc
+func (mr *MockCollectionRefInterfaceMockRecorder) Doc(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Doc", reflect.TypeOf((*MockCollectionRefInterface)(nil).Doc), arg0)
+}
+
 // Documents mocks base method
 func (m *MockCollectionRefInterface) Documents(arg0 context.Context) wrapper.DocumentInteratorInterface {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Documents", arg0)
 	ret0, _ := ret[0].(wrapper.DocumentInteratorInterface)
 	return ret0
@@ -79,11 +96,13 @@ func (m *MockCollectionRefInterface) Documents(arg0 context.Context) wrapper.Doc
 
 // Documents indicates an expected call of Documents
 func (mr *MockCollectionRefInterfaceMockRecorder) Documents(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Documents", reflect.TypeOf((*MockCollectionRefInterface)(nil).Documents), arg0)
 }
 
 // NewDoc mocks base method
 func (m *MockCollectionRefInterface) NewDoc() wrapper.DocRefInterface {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "NewDoc")
 	ret0, _ := ret[0].(wrapper.DocRefInterface)
 	return ret0
@@ -91,6 +110,7 @@ func (m *MockCollectionRefInterface) NewDoc() wrapper.DocRefInterface {
 
 // NewDoc indicates an expected call of NewDoc
 func (mr *MockCollectionRefInterfaceMockRecorder) NewDoc() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewDoc", reflect.TypeOf((*MockCollectionRefInterface)(nil).NewDoc))
 }
 
@@ -117,8 +137,23 @@ func (m *MockDocRefInterface) EXPECT() *MockDocRefInterfaceMockRecorder {
 	return m.recorder
 }
 
+// ID mocks base method
+func (m *MockDocRefInterface) ID() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ID")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// ID indicates an expected call of ID
+func (mr *MockDocRefInterfaceMockRecorder) ID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ID", reflect.TypeOf((*MockDocRefInterface)(nil).ID))
+}
+
 // Set mocks base method
 func (m *MockDocRefInterface) Set(arg0 context.Context, arg1 interface{}, arg2 ...firestore.SetOption) (*firestore.WriteResult, error) {
+	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
@@ -131,6 +166,7 @@ func (m *MockDocRefInterface) Set(arg0 context.Context, arg1 interface{}, arg2 .
 
 // Set indicates an expected call of Set
 func (mr *MockDocRefInterfaceMockRecorder) Set(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockDocRefInterface)(nil).Set), varargs...)
 }
@@ -160,6 +196,7 @@ func (m *MockDocumentInteratorInterface) EXPECT() *MockDocumentInteratorInterfac
 
 // Next mocks base method
 func (m *MockDocumentInteratorInterface) Next() (*firestore.DocumentSnapshot, error) {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Next")
 	ret0, _ := ret[0].(*firestore.DocumentSnapshot)
 	ret1, _ := ret[1].(error)
@@ -168,5 +205,6 @@ func (m *MockDocumentInteratorInterface) Next() (*firestore.DocumentSnapshot, er
 
 // Next indicates an expected call of Next
 func (mr *MockDocumentInteratorInterfaceMockRecorder) Next() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Next", reflect.TypeOf((*MockDocumentInteratorInterface)(nil).Next))
 }
