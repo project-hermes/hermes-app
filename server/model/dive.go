@@ -31,6 +31,7 @@ import (
 // Dive is a dive
 type Dive struct {
 	SensorID   string        `json:"sensorId" firestore:"sensorId,omitempty"`
+	Sensor   Sensor        `json:"sensor"`
 	StartTime  time.Time     `json:"startTime"  firestore:"startTime,omitempty"`
 	EndTime    time.Time     `json:"duration"  firestore:"endTime,omitempty"`
 	StartPoint GeoPoint      `json:"startPoint" firestore:"startPoint,omitempty"`
@@ -65,7 +66,7 @@ func MapDive(data map[string]interface{}) Dive {
 // DiveInterface is an interface for interacting with dive results
 type DiveInterface interface {
 	Create(context.Context, Dive) error
-	List(context.Context) []*Dive
+	List(context.Context) []Dive
 }
 
 // DiveImplementation is an object for CRUD operations on dives
@@ -92,10 +93,10 @@ func (di DiveImplementation) Create(ctx context.Context, dive Dive) error {
 }
 
 // List will fetch all of the dives
-func (di DiveImplementation) List(ctx context.Context) []*Dive {
+func (di DiveImplementation) List(ctx context.Context) []Dive {
 	iter := di.client.Collection("dive").Documents(ctx)
 
-	var dives []*Dive
+	var dives []Dive
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -107,8 +108,7 @@ func (di DiveImplementation) List(ctx context.Context) []*Dive {
 		}
 
 		dive := MapDive(doc.Data())
-
-		dives = append(dives, &dive)
+		dives = append(dives, dive)
 	}
 
 	return dives

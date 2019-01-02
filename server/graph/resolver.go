@@ -26,9 +26,9 @@ func (r *Resolver) Dive() DiveResolver {
 	return &diveResolver{r}
 }
 
-func (r *Resolver) Sensor() SensorResolver {
-	return &sensorResolver{r}
-}
+//func (r *Resolver) Sensor() SensorResolver {
+//	return &sensorResolver{r}
+//}
 
 // Query returns a resolver for all queries
 func (r *Resolver) Query() QueryResolver {
@@ -42,11 +42,11 @@ func (r *Resolver) Mutation() MutationResolver {
 
 type diveResolver struct{ *Resolver }
 
-type sensorResolver struct{ *Resolver }
-
-func (r *sensorResolver) Status(ctx context.Context, obj *model.Sensor) (model.SensorStatus, error) {
-	return obj.Status, nil
-}
+//type sensorResolver struct{ *Resolver }
+//
+//func (r *sensorResolver) Status(ctx context.Context, obj *model.Sensor) (model.SensorStatus, error) {
+//	return obj.Status, nil
+//}
 
 func (r *diveResolver) StartTime(ctx context.Context, obj *model.Dive) (int, error) {
 	ms := obj.StartTime.UnixNano() / int64(time.Millisecond)
@@ -60,8 +60,38 @@ func (r *diveResolver) EndTime(ctx context.Context, obj *model.Dive) (int, error
 
 type queryResolver struct{ *Resolver }
 
-func (r *queryResolver) Dives(ctx context.Context) ([]*model.Dive, error) {
-	return r.diveInt.List(ctx), nil
+func (r *queryResolver) Dives(ctx context.Context) ([]model.Dive, error) {
+	dives := r.diveInt.List(ctx)
+
+	sensorIDs := map[string]bool{}
+	for _, dive := range dives {
+		sensorIDs[dive.SensorID] = true
+	}
+
+	var ids []string
+	for key := range sensorIDs {
+		ids = append(ids, key)
+	}
+
+	sensors, err := r.sensorInt.GetByIDs(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+
+	for index, dive := range dives {
+		for _, sensor := range sensors {
+			if dive.SensorID == sensor.ID {
+				dives[index].Sensor = sensor
+				break
+			}
+		}
+	}
+
+	return dives, nil
+}
+
+func (r *queryResolver) Sensors(ctx context.Context) ([]model.Sensor, error) {
+	return r.sensorInt.GetByIDs(ctx, []string{"12345", "23456"})
 }
 
 type mutationResolver struct { *Resolver }

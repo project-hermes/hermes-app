@@ -35,7 +35,6 @@ type ResolverRoot interface {
 	Dive() DiveResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
-	Sensor() SensorResolver
 }
 
 type DirectiveRoot struct {
@@ -44,6 +43,7 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Dive struct {
 		SensorId   func(childComplexity int) int
+		Sensor     func(childComplexity int) int
 		StartTime  func(childComplexity int) int
 		EndTime    func(childComplexity int) int
 		StartPoint func(childComplexity int) int
@@ -61,7 +61,8 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Dives func(childComplexity int) int
+		Dives   func(childComplexity int) int
+		Sensors func(childComplexity int) int
 	}
 
 	Sensor struct {
@@ -89,10 +90,8 @@ type MutationResolver interface {
 	SensorCreate(ctx context.Context, sensor model.InputSensor) (model.Sensor, error)
 }
 type QueryResolver interface {
-	Dives(ctx context.Context) ([]*model.Dive, error)
-}
-type SensorResolver interface {
-	Status(ctx context.Context, obj *model.Sensor) (model.SensorStatus, error)
+	Dives(ctx context.Context) ([]model.Dive, error)
+	Sensors(ctx context.Context) ([]model.Sensor, error)
 }
 
 func field_Mutation_sensorCreate_args(rawArgs map[string]interface{}) (map[string]interface{}, error) {
@@ -175,6 +174,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Dive.SensorId(childComplexity), true
 
+	case "Dive.sensor":
+		if e.complexity.Dive.Sensor == nil {
+			break
+		}
+
+		return e.complexity.Dive.Sensor(childComplexity), true
+
 	case "Dive.startTime":
 		if e.complexity.Dive.StartTime == nil {
 			break
@@ -242,6 +248,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Dives(childComplexity), true
+
+	case "Query.sensors":
+		if e.complexity.Query.Sensors == nil {
+			break
+		}
+
+		return e.complexity.Query.Sensors(childComplexity), true
 
 	case "Sensor.id":
 		if e.complexity.Sensor.Id == nil {
@@ -379,6 +392,11 @@ func (ec *executionContext) _Dive(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
+		case "sensor":
+			out.Values[i] = ec._Dive_sensor(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
 		case "startTime":
 			wg.Add(1)
 			go func(i int, field graphql.CollectedField) {
@@ -448,6 +466,34 @@ func (ec *executionContext) _Dive_sensorId(ctx context.Context, field graphql.Co
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 	return graphql.MarshalString(res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _Dive_sensor(ctx context.Context, field graphql.CollectedField, obj *model.Dive) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "Dive",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sensor, nil
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.Sensor)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	return ec._Sensor(ctx, field.Selections, &res)
 }
 
 // nolint: vetshadow
@@ -607,6 +653,9 @@ func (ec *executionContext) _Dive_sensorData(ctx context.Context, field graphql.
 			arr1[idx1] = func() graphql.Marshaler {
 
 				if res[idx1] == nil {
+					if !ec.HasError(rctx) {
+						ec.Errorf(ctx, "must not be null")
+					}
 					return graphql.Null
 				}
 
@@ -809,6 +858,15 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				wg.Done()
 			}(i, field)
+		case "sensors":
+			wg.Add(1)
+			go func(i int, field graphql.CollectedField) {
+				out.Values[i] = ec._Query_sensors(ctx, field)
+				if out.Values[i] == graphql.Null {
+					invalid = true
+				}
+				wg.Done()
+			}(i, field)
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -845,7 +903,7 @@ func (ec *executionContext) _Query_dives(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Dive)
+	res := resTmp.([]model.Dive)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
@@ -861,7 +919,7 @@ func (ec *executionContext) _Query_dives(ctx context.Context, field graphql.Coll
 		idx1 := idx1
 		rctx := &graphql.ResolverContext{
 			Index:  &idx1,
-			Result: res[idx1],
+			Result: &res[idx1],
 		}
 		ctx := graphql.WithResolverContext(ctx, rctx)
 		f := func(idx1 int) {
@@ -870,11 +928,67 @@ func (ec *executionContext) _Query_dives(ctx context.Context, field graphql.Coll
 			}
 			arr1[idx1] = func() graphql.Marshaler {
 
-				if res[idx1] == nil {
-					return graphql.Null
-				}
+				return ec._Dive(ctx, field.Selections, &res[idx1])
+			}()
+		}
+		if isLen1 {
+			f(idx1)
+		} else {
+			go f(idx1)
+		}
 
-				return ec._Dive(ctx, field.Selections, res[idx1])
+	}
+	wg.Wait()
+	return arr1
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _Query_sensors(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rctx := &graphql.ResolverContext{
+		Object: "Query",
+		Args:   nil,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Sensors(rctx)
+	})
+	if resTmp == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]model.Sensor)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	arr1 := make(graphql.Array, len(res))
+	var wg sync.WaitGroup
+
+	isLen1 := len(res) == 1
+	if !isLen1 {
+		wg.Add(len(res))
+	}
+
+	for idx1 := range res {
+		idx1 := idx1
+		rctx := &graphql.ResolverContext{
+			Index:  &idx1,
+			Result: &res[idx1],
+		}
+		ctx := graphql.WithResolverContext(ctx, rctx)
+		f := func(idx1 int) {
+			if !isLen1 {
+				defer wg.Done()
+			}
+			arr1[idx1] = func() graphql.Marshaler {
+
+				return ec._Sensor(ctx, field.Selections, &res[idx1])
 			}()
 		}
 		if isLen1 {
@@ -958,7 +1072,6 @@ var sensorImplementors = []string{"Sensor"}
 func (ec *executionContext) _Sensor(ctx context.Context, sel ast.SelectionSet, obj *model.Sensor) graphql.Marshaler {
 	fields := graphql.CollectFields(ctx, sel, sensorImplementors)
 
-	var wg sync.WaitGroup
 	out := graphql.NewOrderedMap(len(fields))
 	invalid := false
 	for i, field := range fields {
@@ -988,19 +1101,15 @@ func (ec *executionContext) _Sensor(ctx context.Context, sel ast.SelectionSet, o
 				invalid = true
 			}
 		case "status":
-			wg.Add(1)
-			go func(i int, field graphql.CollectedField) {
-				out.Values[i] = ec._Sensor_status(ctx, field, obj)
-				if out.Values[i] == graphql.Null {
-					invalid = true
-				}
-				wg.Done()
-			}(i, field)
+			out.Values[i] = ec._Sensor_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalid = true
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
 	}
-	wg.Wait()
+
 	if invalid {
 		return graphql.Null
 	}
@@ -1128,7 +1237,7 @@ func (ec *executionContext) _Sensor_status(ctx context.Context, field graphql.Co
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Sensor().Status(rctx, obj)
+		return obj.Status, nil
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -2845,11 +2954,12 @@ var parsedSchema = gqlparser.MustLoadSchema(
 
 type Dive {
 	sensorId: String!
+	sensor: Sensor!
 	startTime: Int!
     endTime: Int!
 	startPoint: GeoPoint!
 	endPoint: GeoPoint!
-    sensorData: [SensorData]!
+    sensorData: [SensorData!]!
 }
 
 enum SensorStatus {
@@ -2876,10 +2986,11 @@ type SensorData {
 }
 
 type Query {
-  """
-  This will fetch all dives
-  """
-  dives: [Dive]!
+  "This will fetch all dives"
+  dives: [Dive!]!
+
+  "This will fetch all sensors"
+  sensors: [Sensor!]!
 }
 
 input InputSensor {
@@ -2890,6 +3001,7 @@ input InputSensor {
 }
 
 type Mutation {
+  "This will register a new sensor"
   sensorCreate(sensor: InputSensor!): Sensor!
 }
 `},

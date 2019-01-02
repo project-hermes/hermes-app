@@ -84,4 +84,8 @@ var _ = Describe("Sensor Tests", func() {
 			Expect(err).To(Equal(errors.New("ka-boom")))
 		})
 	})
+
+	Context("get sensors by ids", func() {
+
+	})
 })

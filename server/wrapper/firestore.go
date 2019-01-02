@@ -9,6 +9,7 @@ import (
 // DBClientInterface is an interface that mimics the firestore client
 type DBClientInterface interface {
 	Collection(path string) CollectionRefInterface
+	GetAll(context.Context, []DocRefInterface) ([]*firestore.DocumentSnapshot, error)
 }
 
 // DBClient is a wrapper around the firestore client
@@ -23,9 +24,19 @@ func (dbc DBClient) Collection(path string) CollectionRefInterface {
 	}
 }
 
+// GetAll will return snapshots of all the document references
+func (dbc DBClient) GetAll(ctx context.Context, docRefs []DocRefInterface) ([]*firestore.DocumentSnapshot, error) {
+	var refs []*firestore.DocumentRef
+	for _, ref := range docRefs {
+		refs = append(refs, ref.(*DocumentRef).docRef)
+	}
+
+	return dbc.client.GetAll(ctx, refs)
+}
+
 // NewClient will return a firestore client
 func NewClient(ctx context.Context, projectID string) (DBClientInterface, error) {
-	client, err := firestore.NewClient(context.Background(), projectID)
+	client, err := firestore.NewClient(ctx, projectID)
 	return &DBClient{
 		client: client,
 	}, err

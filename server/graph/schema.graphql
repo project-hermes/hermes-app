@@ -5,11 +5,12 @@ type GeoPoint {
 
 type Dive {
 	sensorId: String!
+	sensor: Sensor!
 	startTime: Int!
     endTime: Int!
 	startPoint: GeoPoint!
 	endPoint: GeoPoint!
-    sensorData: [SensorData]!
+    sensorData: [SensorData!]!
 }
 
 enum SensorStatus {
@@ -37,7 +38,10 @@ type SensorData {
 
 type Query {
   "This will fetch all dives"
-  dives: [Dive]!
+  dives: [Dive!]!
+
+  "This will fetch all sensors"
+  sensors: [Sensor!]!
 }
 
 input InputSensor {

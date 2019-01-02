@@ -17,6 +17,7 @@ type Sensor struct {
 
 type SensorInterface interface {
 	Create(context.Context, InputSensor) (Sensor, error)
+	GetByIDs(context.Context, []string) ([]Sensor, error)
 }
 
 type SensorImplementation struct {
@@ -48,4 +49,33 @@ func (si SensorImplementation) Create(ctx context.Context, inputSensor InputSens
 	}
 
 	return sensor, nil
+}
+
+// GetByIDs will return multiple sensors based on the provided IDs
+func (si SensorImplementation) GetByIDs(ctx context.Context, ids []string) ([]Sensor, error) {
+	log.Printf("IDs we're fetching %+v", ids)
+	collectionRef := si.client.Collection("sensor")
+	var docRefs []wrapper.DocRefInterface
+	for _, id := range ids {
+		docRefs = append(docRefs, collectionRef.Doc(id))
+	}
+
+	snapshots, err := si.client.GetAll(ctx, docRefs)
+	if err != nil {
+		return nil, err
+	}
+
+
+
+	sensors := make([]Sensor, len(snapshots))
+	for _, snapshot := range snapshots {
+		var sensor Sensor
+		if err := snapshot.DataTo(&sensor); err != nil {
+			return nil, err
+		} else {
+			sensors = append(sensors, sensor)
+		}
+	}
+
+	return sensors, nil
 }
