@@ -5,20 +5,12 @@
     id-key="id"
     class="rounded-sm"
   />
-
-  <!-- <TableTable
-    :columns="columns"
-    :rows="rows"
-    id-key="id"
-  /> -->
 </template>
 <script>
 import Table from './Table.vue';
-import TableTable from './TableTable.vue';
 export default {
     components: {
-        Table,
-        TableTable
+        Table
     },
     data() {
         return {

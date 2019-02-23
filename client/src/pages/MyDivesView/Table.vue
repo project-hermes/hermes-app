@@ -1,5 +1,5 @@
 <template>
-    <div class="flex border solid border-grey-lighter">
+    <div class="flex border solid border-grey-lighter overflow-x-auto">
         <Column
             v-for="column in columns"
             :key="column.key"
