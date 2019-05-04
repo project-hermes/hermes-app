@@ -1,9 +1,10 @@
 <template>
   <div
-    class="relative z-10 user-button">
+    class="relative z-10">
     <div>
       <div
-        class="relative dropdown-trigger"
+        class="h-10 w-10 rounded-full border-4 border-blue hover:border-blue-dark"
+        :class="{'border-blue-dark': isActive}"
         tabindex="0"
         @click="toggle()"
         @blur="toggle(false)"
@@ -12,9 +13,9 @@
         <img
           v-if="user.photoURL"
           :src="user.photoURL"
-          class="user-button__icon"
+          class="user-icon h-8 w-8 cursor-pointer text-white bg-white rounded-full border-2 border-blue-light"
           aria-haspopup="true"
-          aria-controls="dropdown-menu  ">
+          aria-controls="dropdown-menu">
         <div
           v-else
           class="user-button__icon">
@@ -40,7 +41,6 @@
               @click="signOut"
               @focus="toggle(true)"
               @blur="toggle(false)"
-              
               @keyup.enter="signOut">
               Sign out
             </a>
@@ -80,28 +80,3 @@ export default {
     }
 };
 </script>
-<style lang="scss" scoped>
-.dropdown-trigger {
-    height: 28px;
-    width: 28px;
-}
-
-.user-button__icon {
-    border-radius: 50%;
-    cursor: pointer;
-    height: 28px;
-    width: 28px;
-    color: #363636;
-    background-color: white;
-
-    > svg {
-        height: 28px;
-        width: 28px;
-    }
-}
-
-.dropdown,
-.dropdown-menu {
-    // outline: none;
-}
-</style>
