@@ -5,9 +5,9 @@
       <div
         class="relative dropdown-trigger"
         tabindex="0"
-        @click="toggle"
+        @click="toggle()"
         @blur="toggle(false)"
-        @keyup.enter="toggle"
+        @keyup.enter="toggle()"
       >
         <img
           v-if="user.photoURL"
@@ -37,9 +37,10 @@
             <a
               class="p-2 block w-full h-full cursor-pointer hover:bg-grey-lighter"
               tabindex="0"
-              @blur="toggle(false)"
-              @focus="toggle(true)"
               @click="signOut"
+              @focus="toggle(true)"
+              @blur="toggle(false)"
+              
               @keyup.enter="signOut">
               Sign out
             </a>
@@ -72,7 +73,9 @@ export default {
             signOut: 'auth/signOut'
         }),
         toggle(override) {
-            this.isActive = isUndefined(override) ? !this.isActive : override;
+            setTimeout(() => {
+                this.isActive = isUndefined(override) ? !this.isActive : override;
+            });
         }
     }
 };
