@@ -12,9 +12,7 @@ import router from '~/router';
 firebase.initializeApp(config);
 
 export const db = firebase.firestore();
-const settings = {
-    timestampsInSnapshots: true
-};
+const settings = {};
 db.settings(settings);
 
 export default firebase;
