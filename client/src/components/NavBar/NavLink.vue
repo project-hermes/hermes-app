@@ -1,0 +1,28 @@
+<template>
+    <router-link
+        tag="div"
+        :to="route"
+        class="h-full px-1 uppercase text-sm flex items-center bg-blue hover:bg-blue-dark cursor-pointer sm:px-2 md:px-4"
+        :class="{
+            'text-white': isActive,
+            'text-blue-light': !isActive
+        }"
+    >
+        <slot />
+    </router-link>
+</template>
+<script>
+    export default {
+        props: ['route'],
+        computed: {
+            isActive () {
+
+            }
+        }
+    }
+</script>
+<style scoped>
+.router-link-exact-active {
+    color: #fff;
+}
+</style>
