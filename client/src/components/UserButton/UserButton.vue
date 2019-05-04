@@ -13,7 +13,7 @@
         <img
           v-if="user.photoURL"
           :src="user.photoURL"
-          class="user-icon h-8 w-8 cursor-pointer text-white bg-white rounded-full border-2 border-blue-light"
+          class="h-8 w-8 cursor-pointer text-white bg-white rounded-full border-2 border-blue-light"
           aria-haspopup="true"
           aria-controls="dropdown-menu">
         <div

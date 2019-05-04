@@ -13,12 +13,7 @@
 </template>
 <script>
     export default {
-        props: ['route'],
-        computed: {
-            isActive () {
-
-            }
-        }
+        props: ['route']
     }
 </script>
 <style scoped>
