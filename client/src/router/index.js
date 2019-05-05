@@ -8,7 +8,7 @@ import {
     EmptyView,
     DivesListView,
     DiveDetailsView,
-    MyDivesView
+    DashboardView
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -38,7 +38,7 @@ const router = new VueRouter({
                 {
                     path: '/dashboard',
                     name: 'dashboard',
-                    component: MyDivesView
+                    component: DashboardView
                 },
                 {
                     path: '/dives',

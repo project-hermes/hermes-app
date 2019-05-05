@@ -1,9 +1,9 @@
 <template>
 <main>
     <div class="inline-flex p-8 overflow-x-auto max-w-full">
-        <h1 class="text-black">My Dives</h1>
+        <h1 class="text-black">Dashboard</h1>
         <div aria-hidden="true" class="mx-12 border-l border-solid border-grey-lighter" />
-        <MyDiveAnalytics class="" />
+        <DashboardAnalytics class="" />
     </div>
     <div class="h-82">
         <SimpleMap class="h-full" />
@@ -16,12 +16,12 @@
 
 <script>
 import {SimpleMap} from '~/components';
-import MyDiveAnalytics from './MyDiveAnalytics.vue';
+import DashboardAnalytics from './DashboardAnalytics.vue';
 import DivesTable from './DivesTable.vue';
 export default {
     components: {
         SimpleMap,
-        MyDiveAnalytics,
+        DashboardAnalytics,
         DivesTable
     }
 };
