@@ -27,7 +27,7 @@ const router = new VueRouter({
             },
             children: [
                 {
-                    path: '/',
+                    path: '/dashboard',
                     name: 'dashboard',
                     component: EmptyView
                 },
@@ -65,7 +65,7 @@ router.beforeEach((to, from, next) => {
         if (requiresAuth && !isAuthorized) {
             next('/sign-in');
         } else {
-            next();
+            to.path === '/' ? next('dashboard') : next();
         }
     });
 });

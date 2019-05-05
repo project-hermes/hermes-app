@@ -17,7 +17,7 @@
     }
 </script>
 <style scoped>
-.router-link-exact-active {
+.router-link-active {
     color: #fff;
 }
 </style>

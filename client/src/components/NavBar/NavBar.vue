@@ -5,7 +5,7 @@
       class="mx-3 h-8 w-8"
       alt="Project Hermes logo">
   <div class="flex flex-row h-full items-center">
-      <NavLink route="/">Dashboard</NavLink>
+      <NavLink route="/dashboard">Dashboard</NavLink>
       <NavLink route="/dives">Dives</NavLink>
       <NavLink route="/sensor">Sensor</NavLink>
       <NavLink route="/upload">Upload</NavLink>
