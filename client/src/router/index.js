@@ -50,6 +50,11 @@ const router = new VueRouter({
                     path: '/upload/thank-you',
                     name: 'upload-thanks',
                     component: ThanksView
+                },
+                {
+                    path: '/account-settings',
+                    name: 'accountSettings',
+                    component: EmptyView
                 }
             ]
         }

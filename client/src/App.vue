@@ -30,4 +30,8 @@ html,
 .app__container {
     height: 100%;
 }
+
+*:focus {
+    outline-color: #92B0FC;
+}
 </style>
