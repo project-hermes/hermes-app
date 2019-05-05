@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {SignIn, NavView, UploadView, ThanksView} from '~/pages';
+import {SignIn, NavView, UploadView, ThanksView, EmptyView} from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
 const readyPromise = store.getters['auth/readyPromise'];
@@ -27,13 +27,28 @@ const router = new VueRouter({
             },
             children: [
                 {
-                    path: '/',
-                    name: 'main',
+                    path: '/dashboard',
+                    name: 'dashboard',
+                    component: EmptyView
+                },
+                {
+                    path: '/dives',
+                    name: 'dives',
+                    component: EmptyView
+                },
+                {
+                    path: '/sensor',
+                    name: 'sensor',
+                    component: EmptyView
+                },
+                {
+                    path: '/upload',
+                    name: 'upload',
                     component: UploadView
                 },
                 {
-                    path: '/thank-you',
-                    name: 'thanks',
+                    path: '/upload/thank-you',
+                    name: 'upload-thanks',
                     component: ThanksView
                 }
             ]
@@ -50,7 +65,7 @@ router.beforeEach((to, from, next) => {
         if (requiresAuth && !isAuthorized) {
             next('/sign-in');
         } else {
-            next();
+            to.path === '/' ? next('dashboard') : next();
         }
     });
 });

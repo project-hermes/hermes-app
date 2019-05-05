@@ -52,7 +52,7 @@ export default {
             }).then(() => {
                 setTimeout(() => {
                     this.$router.push({
-                        name: 'thanks'
+                        name: 'upload-thanks'
                     });
                 }, 500);
             });

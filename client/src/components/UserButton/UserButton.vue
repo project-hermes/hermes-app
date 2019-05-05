@@ -1,20 +1,20 @@
 <template>
   <div
-    class="relative z-10 user-button">
+    class="relative z-10">
     <div>
       <div
-        class="relative dropdown-trigger"
+        class="h-10 w-10 rounded-full border-4 border-blue hover:border-blue-dark"
+        :class="{'border-blue-dark': isActive}"
         tabindex="0"
         @click="toggle()"
-        @blur="toggle(false)"
         @keyup.enter="toggle()"
       >
         <img
           v-if="user.photoURL"
           :src="user.photoURL"
-          class="user-button__icon"
+          class="h-8 w-8 cursor-pointer text-white bg-white rounded-full border-2 border-blue-light"
           aria-haspopup="true"
-          aria-controls="dropdown-menu  ">
+          aria-controls="dropdown-menu">
         <div
           v-else
           class="user-button__icon">
@@ -22,6 +22,7 @@
         </div>
       </div>
         <div
+            v-closable="close"
             :class="{'hidden': !isActive}"
             class="absolute z-10 list-reset shadow-md mt-10 pin-t pin-r bg-white">
           <div class="p-4">
@@ -38,9 +39,6 @@
               class="p-2 block w-full h-full cursor-pointer hover:bg-grey-lighter"
               tabindex="0"
               @click="signOut"
-              @focus="toggle(true)"
-              @blur="toggle(false)"
-              
               @keyup.enter="signOut">
               Sign out
             </a>
@@ -72,36 +70,14 @@ export default {
         ...mapActions({
             signOut: 'auth/signOut'
         }),
-        toggle(override) {
+        toggle (override) {
             setTimeout(() => {
                 this.isActive = isUndefined(override) ? !this.isActive : override;
             });
+        },
+        close () {
+            this.isActive = false;
         }
     }
 };
 </script>
-<style lang="scss" scoped>
-.dropdown-trigger {
-    height: 28px;
-    width: 28px;
-}
-
-.user-button__icon {
-    border-radius: 50%;
-    cursor: pointer;
-    height: 28px;
-    width: 28px;
-    color: #363636;
-    background-color: white;
-
-    > svg {
-        height: 28px;
-        width: 28px;
-    }
-}
-
-.dropdown,
-.dropdown-menu {
-    // outline: none;
-}
-</style>
