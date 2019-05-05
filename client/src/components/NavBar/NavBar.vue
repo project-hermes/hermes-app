@@ -9,7 +9,7 @@
       <NavLink route="/dives">Dives</NavLink>
       <NavLink route="/sensor">Sensor</NavLink>
       <NavLink route="/upload">Upload</NavLink>
-      <UserButton class="mx-1 relative" />
+      <UserButton class="ml-1 mr-3 relative" />
   </div>
 </nav>
 </template>
