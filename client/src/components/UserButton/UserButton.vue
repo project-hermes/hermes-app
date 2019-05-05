@@ -7,7 +7,6 @@
         :class="{'border-blue-dark': isActive}"
         tabindex="0"
         @click="toggle()"
-        @blur="toggle(false)"
         @keyup.enter="toggle()"
       >
         <img
@@ -23,6 +22,7 @@
         </div>
       </div>
         <div
+            v-closable="close"
             :class="{'hidden': !isActive}"
             class="absolute z-10 list-reset shadow-md mt-10 pin-t pin-r bg-white">
           <div class="p-4">
@@ -39,8 +39,6 @@
               class="p-2 block w-full h-full cursor-pointer hover:bg-grey-lighter"
               tabindex="0"
               @click="signOut"
-              @focus="toggle(true)"
-              @blur="toggle(false)"
               @keyup.enter="signOut">
               Sign out
             </a>
@@ -72,10 +70,13 @@ export default {
         ...mapActions({
             signOut: 'auth/signOut'
         }),
-        toggle(override) {
+        toggle (override) {
             setTimeout(() => {
                 this.isActive = isUndefined(override) ? !this.isActive : override;
             });
+        },
+        close () {
+            this.isActive = false;
         }
     }
 };
