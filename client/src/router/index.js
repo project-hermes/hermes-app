@@ -1,6 +1,13 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {SignIn, NavView, UploadView, ThanksView, EmptyView} from '~/pages';
+import {
+    SignIn,
+    NavView,
+    UploadView,
+    ThanksView,
+    EmptyView,
+    DivesListView
+} from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
 const readyPromise = store.getters['auth/readyPromise'];
@@ -34,7 +41,7 @@ const router = new VueRouter({
                 {
                     path: '/dives',
                     name: 'dives',
-                    component: EmptyView
+                    component: DivesListView
                 },
                 {
                     path: '/sensor',
