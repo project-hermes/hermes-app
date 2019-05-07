@@ -4,6 +4,10 @@ import store from '~/store';
 import '~/directives';
 import App from './App.vue';
 import './firebase';
+import {RecycleScroller} from 'vue-virtual-scroller';
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
+
+Vue.component('RecycleScroller', RecycleScroller);
 new Vue({
     router,
     store,

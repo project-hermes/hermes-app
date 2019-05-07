@@ -14,7 +14,7 @@
     </main>
 </template>
 <script>
-    import DivesTable from '~/components/Table/DivesTable.vue';
+    import DivesTable from './DivesTable.vue';
     export default {
         components: {
             DivesTable
