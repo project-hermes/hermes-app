@@ -7,9 +7,9 @@
     </router-link>
 </template>
 <script>
-    export default {
-        props: ['route']
-    }
+export default {
+    props: ['route']
+};
 </script>
 <style scoped>
 .router-link-active {

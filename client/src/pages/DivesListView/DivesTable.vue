@@ -1,12 +1,12 @@
 <template>
-  <DumbTable
-    :columns="columns"
-    :rows="rows"
-    :sort-column="sortColumn"
-    id-key="id"
-    class="rounded-sm"
-    @sort="onSort"
-  />
+    <DumbTable
+        :columns="columns"
+        :rows="rows"
+        :sort-column="sortColumn"
+        id-key="id"
+        class="rounded-sm"
+        @sort="onSort"
+    />
 </template>
 <script>
 import {DumbTable} from '~/components';
@@ -16,7 +16,7 @@ export default {
     components: {
         DumbTable
     },
-    data () {
+    data() {
         return {
             columns: [
                 {key: 'date', label: 'Date & Time', linkProp: 'divePath'},
@@ -32,13 +32,13 @@ export default {
         };
     },
     computed: {
-        rows () {
+        rows() {
             return this.rawRows.map(row => {
                 return row;
             });
         }
     },
-    mounted () {
+    mounted() {
         this.rawRows = times(100, i => {
             return {
                 id: `${i}`,
@@ -50,7 +50,7 @@ export default {
                 maxTemp: 25 + i,
                 minTemp: 25 - i,
                 divePath: `/dives/${i}`
-            }
+            };
         });
 
         this.onSort({
@@ -59,12 +59,11 @@ export default {
         });
     },
     methods: {
-        onSort (sortColumn) {
+        onSort(sortColumn) {
             this.sortColumn = sortColumn;
             const rawRows = sortBy(this.rawRows, [sortColumn.key]);
-            this.rawRows = sortColumn.order === 'descending'
-                ? rawRows.reverse()
-                : rawRows;
+            this.rawRows =
+                sortColumn.order === 'descending' ? rawRows.reverse() : rawRows;
         }
     }
 };

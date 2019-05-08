@@ -1,5 +1,7 @@
 <template>
-    <div class="flex border-t border-l border-r solid border-grey-lighter overflow-x-auto">
+    <div
+        class="flex border-t border-l border-r solid border-grey-lighter overflow-x-auto"
+    >
         <DumbColumn
             v-for="column in columns"
             :key="column.key"
@@ -13,29 +15,29 @@
     </div>
 </template>
 <script>
-    import DumbColumn from './DumbColumn.vue';
-    export default {
-        components: {
-            DumbColumn
+import DumbColumn from './DumbColumn.vue';
+export default {
+    components: {
+        DumbColumn
+    },
+    props: {
+        idKey: {
+            type: String
         },
-        props: {
-            idKey: {
-                type: String
-            },
-            rows: {
-                type: Array
-            },
-            columns: {
-                type: Array
-            },
-            sortColumn: {
-                type: Object
-            }
+        rows: {
+            type: Array
         },
-        methods: {
-            onSort (sortColumn) {
-                this.$emit('sort', sortColumn);
-            }
+        columns: {
+            type: Array
+        },
+        sortColumn: {
+            type: Object
+        }
+    },
+    methods: {
+        onSort(sortColumn) {
+            this.$emit('sort', sortColumn);
         }
     }
+};
 </script>
