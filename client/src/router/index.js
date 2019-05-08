@@ -6,7 +6,8 @@ import {
     UploadView,
     ThanksView,
     EmptyView,
-    DivesListView
+    DivesListView,
+    DiveDetailsView
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -42,6 +43,11 @@ const router = new VueRouter({
                     path: '/dives',
                     name: 'dives',
                     component: DivesListView
+                },
+                {
+                    path: '/dives/:diveId',
+                    name: 'diveDetails',
+                    component: DiveDetailsView
                 },
                 {
                     path: '/sensor',
