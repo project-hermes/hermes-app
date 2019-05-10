@@ -7,6 +7,7 @@ class="" />
 import {LineChart} from '~/components';
 import times from 'lodash/times';
 import get from 'lodash/get';
+import Highcharts from 'highcharts';
 
 export default {
     components: {
@@ -49,11 +50,30 @@ export default {
                         tickmarkPlacement: 'on'
                     }
                 },
-                tooltip: {},
+                tooltip: {
+                    backgroundColor: '#333336',
+                    padding: 10,
+                    formatter() {
+                        return `
+                                <span style="padding: 10px;">
+                                    <span style="color: #fff; font-weight: 600; font-size: 14px;">Depth:</span>
+                                    <span style="color: #fff; font-size: 14px;">${
+                                        this.y
+                                    }m</span>
+                                    <br />
+                                    <span style="color: #fff; font-weight: 600; font-size: 14px;">Time:</span>
+                                    <span style="color: #fff; font-size: 14px;">${Highcharts.dateFormat(
+                                        '%H:%M:%S',
+                                        new Date(+this.x)
+                                    )}</span>
+                                </span>
+                        `;
+                    }
+                },
                 xAxis: {
                     type: 'datetime',
                     dateTimeLabelFormats: {
-                        minute: '%M:%S'
+                        minute: '%H:%M:%S'
                     },
                     title: {
                         text: 'Time'
