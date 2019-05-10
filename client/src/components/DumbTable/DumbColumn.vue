@@ -25,7 +25,7 @@
                     <a
                         v-if="column.linkProp"
                         :href="row[column.linkProp]"
-                        class="ml-1 no-underline text-blue "
+                        class="ml-1 no-underline text-blue hover:underline"
                     >
                         {{ row[column.key] }}
                     </a>

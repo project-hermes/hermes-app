@@ -18,16 +18,80 @@
             </div>
             <DiveNumbers class="pl-10" />
         </div>
-        <div class="p-8" />
+        <div class="p-8">
+            <div class="border border-grey-lighter mb-8">
+                <div class="border-b border-grey-lighter">
+                    <h3 class="font-normal p-4">Depth</h3>
+                </div>
+                <div class="flex">
+                    <div
+                        class="border-r border-grey-lighter flex-shrink flex flex-col"
+                    >
+                        <NumberWidget
+                            class="p-6"
+                            label="Max Depth"
+                            value="31.24m"
+                        />
+                        <NumberWidget
+                            class="p-6 pt-0"
+                            label="Avg Depth"
+                            value="24.51m"
+                        />
+                    </div>
+                    <div class="w-full p-6">
+                        <DepthChart />
+                    </div>
+                </div>
+            </div>
+            <div class="border border-grey-lighter">
+                <div class="border-b border-grey-lighter">
+                    <h3 class="font-normal p-4">Temperature</h3>
+                </div>
+                <div class="flex">
+                    <div
+                        class="border-r border-grey-lighter flex-shrink flex flex-col"
+                    >
+                        <NumberWidget
+                            class="p-6"
+                            label="Max Temp"
+                            value="27ºC"
+                            color="red"
+                        />
+                        <NumberWidget
+                            class="p-6 pt-0"
+                            label="Avg Temp"
+                            value="25ºC"
+                            color="black"
+                        />
+                        <NumberWidget
+                            class="p-6 pt-0"
+                            label="Min Temp"
+                            value="23ºC"
+                            color="blue-light"
+                        />
+                    </div>
+                    <div class="w-full p-6">
+                        <TemperatureChart />
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </template>
 <script>
 import ChevronLeftIcon from 'vue-feather-icons/icons/ChevronLeftIcon';
 import DiveNumbers from './DiveNumbers.vue';
+import DepthChart from './DepthChart.vue';
+import TemperatureChart from './TemperatureChart.vue';
+import {NumberWidget} from '~/components';
+
 export default {
     components: {
         ChevronLeftIcon,
-        DiveNumbers
+        DiveNumbers,
+        DepthChart,
+        TemperatureChart,
+        NumberWidget
     }
 };
 </script>
