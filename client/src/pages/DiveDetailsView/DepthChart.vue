@@ -27,21 +27,20 @@ export default {
             chart: {
                 chart: {
                     type: 'areaspline',
-                    // type: 'spline',
-                    plotBackgroundColor: {
-                        linearGradient: {x1: 0, x2: 0, y1: 0, y2: 1},
-                        stops: [
-                            [0, 'rgba(77, 102, 202, 0.1)'], // start
-                            [1, 'rgba(77, 102, 202, 0.8)'] // end
-                        ]
-                    },
+                    plotBackgroundColor: '#fff',
                     animation: false
                 },
                 title: '',
                 plotOptions: {
                     series: {
                         turboThreshold: 3000,
-                        fillColor: '#fff',
+                        fillColor: {
+                            linearGradient: {x1: 0, x2: 0, y1: 0, y2: 1},
+                            stops: [
+                                [0, 'rgba(77, 102, 202, 0.1)'], // start
+                                [1, 'rgba(77, 102, 202, 0.8)'] // end
+                            ]
+                        },
                         color: '#4D66CA',
                         marker: {
                             enabled: false
