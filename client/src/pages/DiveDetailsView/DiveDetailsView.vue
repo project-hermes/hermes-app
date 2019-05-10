@@ -1,6 +1,8 @@
 <template>
     <main class="h-full w-full">
-        <div class="w-full flex items-center p-10 border-b border-grey-lighter">
+        <div
+            class="w-full flex items-center p-10 border-b border-grey-lighter overflow-x-auto"
+        >
             <div class="pr-10 border-r border-grey-lighter">
                 <router-link
                     :to="{name: 'dives'}"
@@ -38,7 +40,7 @@
                             value="24.51m"
                         />
                     </div>
-                    <div class="w-full p-6">
+                    <div class="w-full p-6 overflow-x-auto">
                         <DepthChart />
                     </div>
                 </div>
@@ -70,7 +72,7 @@
                             color="blue-light"
                         />
                     </div>
-                    <div class="w-full p-6">
+                    <div class="w-full p-6 overflow-x-auto">
                         <TemperatureChart />
                     </div>
                 </div>
