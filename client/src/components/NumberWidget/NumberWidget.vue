@@ -7,7 +7,7 @@
         <div
             v-if="value"
             :class="'text-' + color"
-      class="text-2xl whitespace-no-wrap"
+            class="text-2xl whitespace-no-wrap mt-1"
         >
             {{ value }}
         </div>
