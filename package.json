@@ -23,6 +23,7 @@
     "homepage": "https://github.com/project-hermes/hermes-firebase#readme",
     "dependencies": {
         "firebase": "^5.11.1",
+        "highcharts": "^7.1.1",
         "lodash": "^4.17.11",
         "vue": "^2.6.10",
         "vue-feather-icons": "^4.10.0",

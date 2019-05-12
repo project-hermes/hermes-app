@@ -1,64 +1,44 @@
 <template>
-  <div id="line-chart" />
+    <div :id="id" />
 </template>
 
 <script>
 import Highcharts from 'highcharts';
+import get from 'lodash/get';
 export default {
     props: {
-        chartData: {
+        series: {
+            type: Array,
+            default: () => []
+        },
+        chart: {
             type: Object,
-            default: () => ({
-                series: []
-            })
+            default: undefined
         }
     },
+    data() {
+        return {
+            id: 'chart-' + Date.now() + Math.random()
+        };
+    },
     watch: {
-        chartData() {
+        series() {
+            this.renderChart();
+        },
+        chart() {
             this.renderChart();
         }
     },
     mounted() {
-        this.renderChart();
+        this.id = this.renderChart();
     },
     methods: {
         renderChart() {
-            Highcharts.chart('line-chart', {
-                chart: {
-                    type: 'spline'
-                },
-                title: '',
-                plotOptions: {
-                    series: {
-                        turboThreshold: 3000
-                    }
-                },
-                tooltip: {
-                    shared: true
-                },
-                xAxis: {
-                    type: 'datetime'
-                },
-                yAxis: [
-                    {
-                        title: {
-                            text: 'Temperature'
-                        },
-                        labels: {
-                            format: '{value} °C'
-                        }
-                    },
-                    {
-                        title: {
-                            text: 'Depth'
-                        },
-                        labels: {
-                            format: '{value} cm'
-                        },
-                        opposite: true
-                    }
-                ],
-                series: this.chartData.series
+            if (!this.chart) return;
+
+            Highcharts.chart(this.id, {
+                ...this.chart,
+                series: this.series
             });
         }
     }
