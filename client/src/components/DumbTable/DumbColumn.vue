@@ -22,13 +22,13 @@
                 <div
                     class="h-10 p-2 flex items-center border-b solid border-grey-lighter text-black whitespace-no-wrap overflow-x-auto"
                 >
-                    <a
+                    <router-link
                         v-if="column.linkProp"
-                        :href="row[column.linkProp]"
+                        :to="row[column.linkProp]"
                         class="ml-1 no-underline text-blue hover:underline"
                     >
                         {{ row[column.key] }}
-                    </a>
+                    </router-link>
                     <span v-else class="ml-1">
                         {{ row[column.key] }}
                     </span>

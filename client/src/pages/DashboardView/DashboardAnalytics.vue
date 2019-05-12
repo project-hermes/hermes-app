@@ -10,36 +10,24 @@
     </div>
 </template>
 <script>
-    import NumberWidget from './NumberWidget.vue';
-    export default {
-        components: {
-            NumberWidget
-        },
-        data () {
-            return {
-                widgets: [
-                    {
-                        label: 'Dives',
-                        value: 23
-                    },
-                    {
-                        label: 'Total Time',
-                        value: '47h 22m'
-                    },
-                    {
-                        label: 'Max Depth',
-                        value: '31.24m'
-                    },
-                    {
-                        label: 'Temp High',
-                        value: '88˚F'
-                    },
-                    {
-                        label: 'Temp Low',
-                        value: '57˚F'
-                    }
-                ]
-            }
-        }
-    };
+import {NumberWidget} from '~/components';
+export default {
+    components: {
+        NumberWidget
+    },
+    data() {
+        return {
+            widgets: [
+                {
+                    label: 'Dives',
+                    value: 23
+                },
+                {
+                    label: 'Total Time',
+                    value: '47h 22m'
+                }
+            ]
+        };
+    }
+};
 </script>

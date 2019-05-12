@@ -455,6 +455,7 @@ module.exports = {
         '48': '12rem',
         '64': '16rem',
         '82': '20rem',
+        '96': '24rem',
         full: '100%',
         screen: '100vh'
     },
