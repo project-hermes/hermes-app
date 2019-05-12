@@ -1,5 +1,5 @@
 <template>
-  <div id="simple-map" />
+    <div id="simple-map" />
 </template>
 
 <script>
@@ -163,6 +163,3 @@ export default {
     }
 };
 </script>
-<style lang="scss">
-    // @import 'leaflet/dist/leaflet.css';
-</style>
