@@ -7,7 +7,8 @@ import {
     ThanksView,
     EmptyView,
     DivesListView,
-    DiveDetailsView
+    DiveDetailsView,
+    DashboardView
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -37,7 +38,7 @@ const router = new VueRouter({
                 {
                     path: '/dashboard',
                     name: 'dashboard',
-                    component: EmptyView
+                    component: DashboardView
                 },
                 {
                     path: '/dives',

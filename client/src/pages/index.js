@@ -7,3 +7,4 @@ export {default as DivesListView} from './DivesListView/DivesListView.vue';
 export {
     default as DiveDetailsView
 } from './DiveDetailsView/DiveDetailsView.vue';
+export {default as DashboardView} from './DashboardView/DashboardView.vue';

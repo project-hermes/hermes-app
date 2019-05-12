@@ -12,9 +12,15 @@
 import {DumbTable} from '~/components';
 import times from 'lodash/times';
 import sortBy from 'lodash/sortBy';
+import isFinite from 'lodash/isFinite';
 export default {
     components: {
         DumbTable
+    },
+    props: {
+        limit: {
+            type: Number
+        }
     },
     data() {
         return {
@@ -33,9 +39,9 @@ export default {
     },
     computed: {
         rows() {
-            return this.rawRows.map(row => {
-                return row;
-            });
+            return isFinite(this.limit)
+                ? this.rawRows.slice(0, this.limit)
+                : this.rawRows;
         }
     },
     mounted() {
