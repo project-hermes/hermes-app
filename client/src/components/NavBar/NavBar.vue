@@ -1,5 +1,5 @@
 <template>
-    <nav class="h-16 z-10 flex items-center justify-between bg-blue">
+    <nav class="h-16 z-50 flex items-center justify-between bg-blue">
         <img :src="navLogo" class="mx-3 h-8 w-8" alt="Project Hermes logo" />
         <div class="flex flex-row h-full items-center">
             <NavLink route="/dashboard">Dashboard</NavLink>

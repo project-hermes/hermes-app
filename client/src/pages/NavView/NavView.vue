@@ -1,12 +1,10 @@
 <template>
-  <div
-    class="relative">
-    <NavBar
-      v-if="isAuthorized"/>
     <div class="relative">
-        <router-view />
+        <NavBar v-if="isAuthorized" />
+        <div class="relative z-0">
+            <router-view />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
