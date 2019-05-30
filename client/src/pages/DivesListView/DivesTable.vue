@@ -1,5 +1,6 @@
 <template>
     <DumbTable
+        v-if="rows.length > 0"
         :columns="columns"
         :rows="rows"
         :sort-column="sortColumn"
@@ -7,6 +8,14 @@
         class="rounded-sm"
         @sort="onSort"
     />
+    <div v-else class="h-64 flex flex-col items-center justify-center">
+        <h2 class="font-normal text-center">
+            You don't have any dives recorded in Project Hermes yet.
+        </h2>
+        <span class="text-center text-grey-darker m-4"
+            >Sync data from your Hermes sensor to get started.</span
+        >
+    </div>
 </template>
 <script>
 import {DumbTable} from '~/components';

@@ -1,7 +1,7 @@
 <template>
-    <div class="relative">
+    <div class="relative h-full flex flex-col">
         <NavBar v-if="isAuthorized" />
-        <div class="relative z-0">
+        <div class="flex-auto relative z-0">
             <router-view />
         </div>
     </div>
