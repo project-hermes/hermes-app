@@ -1,6 +1,6 @@
 <template>
     <div class="relative h-full flex flex-col">
-        <NavBar v-if="isAuthorized" />
+        <NavBar v-if="isAuthorized" class="flex-none" />
         <div class="flex-auto relative z-0">
             <router-view />
         </div>
