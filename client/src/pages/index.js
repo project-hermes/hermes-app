@@ -8,3 +8,6 @@ export {
     default as DiveDetailsView
 } from './DiveDetailsView/DiveDetailsView.vue';
 export {default as DashboardView} from './DashboardView/DashboardView.vue';
+export {
+    default as AccountSettingsView
+} from './AccountSettingsView/AccountSettingsView.vue';

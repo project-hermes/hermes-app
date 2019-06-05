@@ -8,7 +8,8 @@ import {
     EmptyView,
     DivesListView,
     DiveDetailsView,
-    DashboardView
+    DashboardView,
+    AccountSettingsView
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -68,7 +69,7 @@ const router = new VueRouter({
                 {
                     path: '/account-settings',
                     name: 'accountSettings',
-                    component: EmptyView
+                    component: AccountSettingsView
                 }
             ]
         }
