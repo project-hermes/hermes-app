@@ -50,6 +50,7 @@ let colors = {
     'blue-light': '#92B0FC',
     'blue-darkest': '#213073',
     black: '#333336',
+    'black-transparent': 'rgba(51, 51, 54, 0.4)',
     'grey-darker': '#77777a',
     grey: '#cccccd',
     'grey-lighter': '#dddddf',

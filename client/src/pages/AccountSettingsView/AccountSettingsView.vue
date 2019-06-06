@@ -1,5 +1,6 @@
 <template>
     <main class="h-full w-full">
+        <Modal v-if="isModalVisible" @close="isModalVisible = false" />
         <div
             class="w-full p-10 inline-flex items-center items-stretch border-b border-grey-lighter"
         >
@@ -13,7 +14,10 @@
                     <h3 class="font-normal p-4">Delete Data</h3>
                 </div>
                 <div class="w-full p-10 overflow-x-auto">
-                    <button class="bg-red p-3 text-white rounded">
+                    <button
+                        class="bg-red p-3 text-white rounded"
+                        @click="isModalVisible = true"
+                    >
                         Request to Delete Data
                     </button>
                 </div>
@@ -22,5 +26,15 @@
     </main>
 </template>
 <script>
-export default {};
+import Modal from './Modal.vue';
+export default {
+    components: {
+        Modal
+    },
+    data() {
+        return {
+            isModalVisible: false
+        };
+    }
+};
 </script>
