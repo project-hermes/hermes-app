@@ -11,3 +11,4 @@ export {default as DashboardView} from './DashboardView/DashboardView.vue';
 export {
     default as AccountSettingsView
 } from './AccountSettingsView/AccountSettingsView.vue';
+export {default as SensorView} from './SensorView/SensorView.vue';

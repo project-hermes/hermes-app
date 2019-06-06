@@ -5,11 +5,11 @@ import {
     NavView,
     UploadView,
     ThanksView,
-    EmptyView,
     DivesListView,
     DiveDetailsView,
     DashboardView,
-    AccountSettingsView
+    AccountSettingsView,
+    SensorView
 } from '~/pages';
 import store from '~/store';
 Vue.use(VueRouter);
@@ -54,7 +54,7 @@ const router = new VueRouter({
                 {
                     path: '/sensor',
                     name: 'sensor',
-                    component: EmptyView
+                    component: SensorView
                 },
                 {
                     path: '/upload',
