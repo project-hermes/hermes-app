@@ -2,21 +2,24 @@ package graph
 
 import (
 	"context"
+	"log"
 	"time"
+
+	"github.com/99designs/gqlgen/graphql"
 
 	"github.com/project-hermes/hermes-app/server/model"
 )
 
 // Resolver is an internal implementation which leverages interfaces for resolving the graph
 type Resolver struct {
-	diveInt model.DiveInterface
+	diveInt   model.DiveInterface
 	sensorInt model.SensorInterface
 }
 
 // NewResolver will return a resolver with all the necessary dependencies
 func NewResolver(diveInt model.DiveInterface, sensorInt model.SensorInterface) Resolver {
 	return Resolver{
-		diveInt: diveInt,
+		diveInt:   diveInt,
 		sensorInt: sensorInt,
 	}
 }
@@ -63,26 +66,43 @@ type queryResolver struct{ *Resolver }
 func (r *queryResolver) Dives(ctx context.Context) ([]model.Dive, error) {
 	dives := r.diveInt.List(ctx)
 
-	sensorIDs := map[string]bool{}
-	for _, dive := range dives {
-		sensorIDs[dive.SensorID] = true
+	resolveCtx := graphql.GetResolverContext(ctx)
+	log.Printf("Resolve context %+v", resolveCtx)
+
+	cf := graphql.CollectFieldsCtx(ctx, []string{"sensor"})
+	log.Printf("GraphQL Collected Fields: %+v", cf)
+
+	fetchSensors := false
+	for _, field := range cf {
+		if field.Name == "sensor" {
+			fetchSensors = true
+			break
+		}
+		log.Printf("field name: %s, alias %s, and definition %+v", field.Name, field.Alias, field.Definition)
 	}
 
-	var ids []string
-	for key := range sensorIDs {
-		ids = append(ids, key)
-	}
+	if fetchSensors {
+		sensorIDs := map[string]bool{}
+		for _, dive := range dives {
+			sensorIDs[dive.SensorID] = true
+		}
 
-	sensors, err := r.sensorInt.GetByIDs(ctx, ids)
-	if err != nil {
-		return nil, err
-	}
+		var ids []string
+		for key := range sensorIDs {
+			ids = append(ids, key)
+		}
 
-	for index, dive := range dives {
-		for _, sensor := range sensors {
-			if dive.SensorID == sensor.ID {
-				dives[index].Sensor = sensor
-				break
+		sensors, err := r.sensorInt.GetByIDs(ctx, ids)
+		if err != nil {
+			return nil, err
+		}
+
+		for index, dive := range dives {
+			for _, sensor := range sensors {
+				if dive.SensorID == sensor.ID {
+					dives[index].Sensor = sensor
+					break
+				}
 			}
 		}
 	}
@@ -94,9 +114,8 @@ func (r *queryResolver) Sensors(ctx context.Context) ([]model.Sensor, error) {
 	return r.sensorInt.GetByIDs(ctx, []string{"12345", "23456"})
 }
 
-type mutationResolver struct { *Resolver }
+type mutationResolver struct{ *Resolver }
 
 func (r *mutationResolver) SensorCreate(ctx context.Context, sensor model.InputSensor) (model.Sensor, error) {
 	return r.sensorInt.Create(ctx, sensor)
 }
-

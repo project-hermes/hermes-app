@@ -12,10 +12,12 @@ import (
 	"firebase.google.com/go/auth"
 	"github.com/99designs/gqlgen/handler"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/project-hermes/hermes-app/server/graph"
 	"google.golang.org/api/option"
 
 	"github.com/project-hermes/hermes-app/server/model"
+	"github.com/project-hermes/hermes-app/server/types/protobuf"
 	"github.com/project-hermes/hermes-app/server/wrapper"
 )
 
@@ -49,6 +51,8 @@ func main() {
 	appGroup := router.Group("/")
 	appGroup.GET("/", helloForm)
 
+	router.POST("/dive", createDive)
+
 	gqlPlayground := gin.WrapH(handler.Playground("GraphQL playground", "/query"))
 	router.GET("/query", gqlPlayground)
 
@@ -67,6 +71,16 @@ func helloForm(c *gin.Context) {
 	params := templateParams{}
 	indexTemplate.Execute(c.Writer, params)
 	return
+}
+
+func createDive(c *gin.Context) {
+	dive := &protobuf.Dive{}
+	err := binding.ProtoBuf.Bind(c.Request, dive)
+	if err != nil {
+		log.Fatalf("there was an issue with the dive protobuf binding %s", err)
+	} else {
+		log.Printf("got dive protobuf %+v", dive)
+	}
 }
 
 // InjectFirebase will inject firebase
