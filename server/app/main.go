@@ -17,7 +17,7 @@ import (
 	"google.golang.org/api/option"
 
 	"github.com/project-hermes/hermes-app/server/model"
-	"github.com/project-hermes/hermes-app/server/types/protobuf"
+	"github.com/project-hermes/hermes-app/server/protobuf"
 	"github.com/project-hermes/hermes-app/server/wrapper"
 )
 

@@ -21,11 +21,12 @@ type InputSensor struct {
 }
 
 type SensorData struct {
-	Depth       float64 `json:"depth"`
-	RawPressure int     `json:"rawPressure"`
-	RawTemp     int     `json:"rawTemp"`
-	Temp        float64 `json:"temp"`
-	Time        int     `json:"time"`
+	Conductivity float64 `json:"conductivity"`
+	Depth        float64 `json:"depth"`
+	RawPressure  int     `json:"rawPressure"`
+	RawTemp      int     `json:"rawTemp"`
+	Temp         float64 `json:"temp"`
+	Time         int     `json:"time"`
 }
 
 type SensorStatus string
@@ -36,6 +37,13 @@ const (
 	SensorStatusDisabled SensorStatus = "DISABLED"
 	SensorStatusUnknown  SensorStatus = "UNKNOWN"
 )
+
+var AllSensorStatus = []SensorStatus{
+	SensorStatusActive,
+	SensorStatusInactive,
+	SensorStatusDisabled,
+	SensorStatusUnknown,
+}
 
 func (e SensorStatus) IsValid() bool {
 	switch e {

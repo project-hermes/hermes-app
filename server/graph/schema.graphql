@@ -29,6 +29,7 @@ type Sensor {
 }
 
 type SensorData {
+    conductivity: Float!
   depth: Float!
   rawPressure: Int!
   rawTemp: Int!

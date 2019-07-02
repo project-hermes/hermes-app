@@ -17,6 +17,5 @@ mock-objects:
 graphql-schema:
 	go run server/scripts/gqlgen.go
 
-# proto:
-	# protoc --go_out=/Users/jameswilson/go/src dive.proto
-	# ~/Downloads/nanopb-0.3.9.2-macosx-x86/generator-bin/protoc --nanopb_out=. dive.proto
+proto:
+	protoc --go_out=/Users/jameswilson/go/src ./protobuf/dive.proto

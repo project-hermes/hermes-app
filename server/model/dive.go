@@ -2,6 +2,8 @@ package model
 
 import (
 	"context"
+	"github.com/project-hermes/hermes-app/server/protobuf"
+	"github.com/project-hermes/hermes-app/server/types"
 	"log"
 	"time"
 
@@ -66,6 +68,7 @@ func MapDive(data map[string]interface{}) Dive {
 // DiveInterface is an interface for interacting with dive results
 type DiveInterface interface {
 	Create(context.Context, Dive) error
+	CreateFromProtoBuf(context.Context, *protobuf.Dive) error
 	List(context.Context) []Dive
 }
 
@@ -92,6 +95,36 @@ func (di DiveImplementation) Create(ctx context.Context, dive Dive) error {
 	return nil
 }
 
+// CreateFromProtoBuf will create a new dive from the provided dive protocol buffer object
+// TODO: SensorData should not be a nil array unless it REALLY needs to be
+func (di DiveImplementation) CreateFromProtoBuf(ctx context.Context, dive *protobuf.Dive) error {
+	var sensorData []*SensorData
+	for _, data := range dive.DiveData {
+		sensorData = append(sensorData, &SensorData{
+			Temp: float64(data.Temp),
+			Depth: float64(data.Depth),
+			Conductivity: float64(data.Conductivity),
+		})
+	}
+
+	newDive := Dive{
+		SensorID: dive.SensorId,
+		StartTime: types.FromMilliseconds(dive.StartTime),
+		EndTime: types.FromMilliseconds(dive.EndTime),
+		StartPoint: GeoPoint {
+			Lat: float64(dive.StartLat),
+			Long: float64(dive.StartLong),
+		},
+		EndPoint: GeoPoint {
+			Lat: float64(dive.EndLat),
+			Long: float64(dive.EndLong),
+		},
+		SensorData: sensorData,
+	}
+
+	return di.Create(ctx, newDive)
+}
+
 // List will fetch all of the dives
 func (di DiveImplementation) List(ctx context.Context) []Dive {
 	iter := di.client.Collection("dive").Documents(ctx)
@@ -112,4 +145,27 @@ func (di DiveImplementation) List(ctx context.Context) []Dive {
 	}
 
 	return dives
+}
+
+
+func NewDiveStorageImplementation(client wrapper.StorageInterface) DiveInterface {
+	return &diveStorageImplementation{
+		client: client,
+	}
+}
+
+type diveStorageImplementation struct{
+	client wrapper.StorageInterface
+}
+
+func (dsi diveStorageImplementation) Create(context.Context, Dive) error {
+	panic("implement me")
+}
+
+func (dsi diveStorageImplementation) CreateFromProtoBuf(context.Context, *protobuf.Dive) error {
+	panic("implement me")
+}
+
+func (dsi diveStorageImplementation) List(context.Context) []Dive {
+	panic("implement me")
 }
