@@ -14,20 +14,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/project-hermes/hermes-app/server/graph"
-	"google.golang.org/api/option"
-
 	"github.com/project-hermes/hermes-app/server/model"
 	"github.com/project-hermes/hermes-app/server/protobuf"
 	"github.com/project-hermes/hermes-app/server/wrapper"
 )
 
-const (
-	// FirebaseApp is a constant for pulling app from gin
-	FirebaseApp = "FirebaseApp"
 
-	// FirebaseAuth is a constant for pulling auth from gin
-	FirebaseAuth = "FirebaseAuth"
-)
 
 type templateParams struct {
 	Notice string
@@ -46,15 +38,15 @@ func main() {
 	router := gin.Default()
 	router.Use(gin.ErrorLogger())
 	router.Use(gin.Recovery())
-	router.Use(InjectFirebase)
+	router.Use(injectFirebase)
+	router.Use(injectModel)
 
 	appGroup := router.Group("/")
 	appGroup.GET("/", helloForm)
 
 	router.POST("/dive", createDive)
 
-	gqlPlayground := gin.WrapH(handler.Playground("GraphQL playground", "/query"))
-	router.GET("/query", gqlPlayground)
+
 
 	dbClient, _ := wrapper.NewClient(context.Background(), "project-hermes-staging")
 	diveInt := model.NewDiveImplementation(dbClient)
@@ -64,7 +56,9 @@ func main() {
 	gql := gin.WrapH(handler.GraphQL(graph.NewExecutableSchema(graph.Config{Resolvers: &resolver})))
 	router.POST("/query", gql)
 
-	router.Run()
+	if err := router.Run(); err != nil {
+		log.Fatalf("unable to start gin router %s", err.Error())
+	}
 }
 
 func helloForm(c *gin.Context) {
@@ -73,50 +67,20 @@ func helloForm(c *gin.Context) {
 	return
 }
 
+// TODO: Clean this up and prepare for it to be called by PubSub
 func createDive(c *gin.Context) {
 	dive := &protobuf.Dive{}
 	err := binding.ProtoBuf.Bind(c.Request, dive)
+
 	if err != nil {
 		log.Fatalf("there was an issue with the dive protobuf binding %s", err)
-	} else {
-		log.Printf("got dive protobuf %+v", dive)
-	}
-}
-
-// InjectFirebase will inject firebase
-func InjectFirebase(c *gin.Context) {
-	log.Printf("Loading firebase app")
-	c.Keys = map[string]interface{}{}
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	opt := option.WithHTTPClient(http.DefaultClient)
-	opt = option.WithScopes("https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/userinfo.email")
-	databaseURL := "https://project-hermes-staging.firebaseio.com"
-	config := &firebase.Config{
-		DatabaseURL: databaseURL,
-		ProjectID:   "project-hermes-staging",
+		c.AbortWithError(http.StatusBadRequest, errors.New("unable to parse protobuf dive"))
 	}
 
-	if app, err := firebase.NewApp(ctx, config, opt); err != nil {
-		log.Fatalf("Unable to load firebase app: %s", err)
-		c.AbortWithError(http.StatusServiceUnavailable, errors.New("an error occurred while processing your request"))
-	} else {
-		c.Keys[FirebaseApp] = app
-		c.Next()
-	}
-}
+	if diveClient, ok := c.Keys[Dive].(model.DiveInterface); !ok {
+		log.Fatalf("Could not get dive implementation from create dive")
+	} else if err := diveClient.Create(c, model.NewDive(dive)); err != nil {
 
-// InjectFirebaseAuthClient will inject the firebase auth
-func InjectFirebaseAuthClient(c *gin.Context) {
-	log.Printf("Loading firebase auth client")
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-
-	if app, ok := c.Keys[FirebaseApp].(*firebase.App); !ok {
-		log.Fatalf("Could not get firebase app")
-	} else if authClient, err := app.Auth(ctx); err != nil {
-		log.Fatalf("Unable to create auth client: %v", err)
-	} else {
-		c.Keys[FirebaseAuth] = authClient
-		c.Next()
 	}
 }
 
