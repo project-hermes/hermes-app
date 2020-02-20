@@ -19,28 +19,33 @@ type ObjectHandleInterface interface {
 }
 
 // Storage client is a wrapper around the GCS Storage Client
-type StorageClient struct {
+type storageClient struct {
 	client *storage.Client
 }
 
 // Bucket will fetch the bucket from the Storage System
-func (sc StorageClient) Bucket(name string) BucketHandleInterface {
-	return BucketHandle{
+func (sc storageClient) Bucket(name string) BucketHandleInterface {
+	return bucketHandle{
 		handle: sc.client.Bucket(name),
 	}
 }
 
 func NewStorageClient(ctx context.Context) (StorageClientInterface, error) {
 	client, err := storage.NewClient(ctx)
-	return &StorageClient{
+	return &storageClient{
 		client: client,
 	}, err
 }
 
-type BucketHandle struct {
+type bucketHandle struct {
 	handle *storage.BucketHandle
 }
 
-func (bh BucketHandle) Object(name string) ObjectHandleInterface {
+func (bh bucketHandle) Object(name string) ObjectHandleInterface {
 	return nil
+}
+
+type TestType struct {
+	testType TestType
+	name string
 }

@@ -48,13 +48,13 @@ func main() {
 
 
 
-	dbClient, _ := wrapper.NewClient(context.Background(), "project-hermes-staging")
-	diveInt := model.NewDiveImplementation(dbClient)
-	sensorInt := model.NewSensorImplementation(dbClient)
+	// dbClient, _ := wrapper.NewClient(context.Background(), "project-hermes-staging")
+	// diveInt := model.NewDiveImplementation(dbClient)
+	// sensorInt := model.NewSensorImplementation(dbClient)
 
-	resolver := graph.NewResolver(diveInt, sensorInt)
-	gql := gin.WrapH(handler.GraphQL(graph.NewExecutableSchema(graph.Config{Resolvers: &resolver})))
-	router.POST("/query", gql)
+	// resolver := graph.NewResolver(diveInt, sensorInt)
+	// gql := gin.WrapH(handler.GraphQL(graph.NewExecutableSchema(graph.Config{Resolvers: &resolver})))
+	// router.POST("/query", gql)
 
 	if err := router.Run(); err != nil {
 		log.Fatalf("unable to start gin router %s", err.Error())
